@@ -13,7 +13,7 @@ Synapse::Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::sh
                                          post_synaptic_neuron(move(postSynapticNeuron)) {
     if (random_strength) {
         float rand_strength = randUniform() - 1; // remap it to [-0.5, 0.5]
-        rand_strength *= 0.5;
+        rand_strength *= 2;
 
         base_strength = rand_strength;
         current_strength = rand_strength;
