@@ -37,14 +37,12 @@ public:
 
     /// Receives charge from an incoming synapse
     /// \param incoming_charge the amount of electrical charge (in mV)
-    void receive(float incoming_charge);
+    void stimulate(float incoming_charge);
 
     void add_outgoing_synapse(const std::shared_ptr<Synapse>& synapse);
     void add_incoming_synapse(const std::shared_ptr<Synapse>& synapse);
 
     float probe() const;
-
-    void stimulate(float charge);
 };
 
 

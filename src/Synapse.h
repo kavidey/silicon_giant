@@ -8,12 +8,12 @@
 #include <memory>
 #include "Neuron.h"
 
-const float BASE_STRENGTH = 0.1;
+const float BASE_STRENGTH = 0.5;
 const float CURRENT_STRENGTH_DECREASE_RATE = 0.99;
 const float FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH = 0.1;
 
 // Long Term Potentiation (LTP) consts
-const int LTP_TIME = 500;
+const int LTP_TIME = 1500;
 const float LTP_INFLUENCE = 0.1;
 
 class Synapse {
@@ -23,7 +23,7 @@ class Synapse {
     std::shared_ptr<Neuron> post_synaptic_neuron;
 
 public:
-    explicit Synapse(const std::shared_ptr<Neuron> &postSynapticNeuron);
+    Synapse(const std::shared_ptr<Neuron> &postSynapticNeuron, bool random_strength);
 
     /// Simulates the neuron for one timestep
     /// \param timestep current simulation timestep

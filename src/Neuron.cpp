@@ -38,7 +38,7 @@ void Neuron::fire(int timestep) {
     charge = DEFAULT_CHARGE; // I think this is redundant
 }
 
-void Neuron::receive(float incoming_charge) {
+void Neuron::stimulate(float incoming_charge) {
     if (!in_refractory_period) {
         charge += incoming_charge;
     }
@@ -54,10 +54,6 @@ void Neuron::add_incoming_synapse(const std::shared_ptr<Synapse>& synapse) {
 
 float Neuron::probe() const {
     return charge;
-}
-
-void Neuron::stimulate(float charge) {
-    Neuron::charge = charge;
 }
 
 bool Neuron::isInRefractoryPeriod() const {

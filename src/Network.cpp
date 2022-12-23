@@ -37,7 +37,7 @@ Network::add_connection(const std::shared_ptr<Neuron>& pre_synaptic_neuron, cons
     // Make sure that both neurons are in already in the list
     if ((std::find(neurons.begin(), neurons.end(), pre_synaptic_neuron) != neurons.end()) &&
         (std::find(neurons.begin(), neurons.end(), post_synaptic_neuron) != neurons.end())) {
-         auto synapse = std::make_shared<Synapse>(post_synaptic_neuron);
+         auto synapse = std::make_shared<Synapse>(post_synaptic_neuron, true);
 
          synapses.push_back(synapse);
          pre_synaptic_neuron->add_outgoing_synapse(synapse);
