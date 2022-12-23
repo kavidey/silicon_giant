@@ -8,10 +8,13 @@
 #include "Neuron.h"
 #include "../lib/silicon_giant/util.h"
 
-Synapse::Synapse(const std::shared_ptr<Neuron> &postSynapticNeuron, bool random_strength = true)
-        : post_synaptic_neuron(move(postSynapticNeuron)) {
+Synapse::Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::shared_ptr<Neuron> &postSynapticNeuron,
+                 bool random_strength) : pre_synaptic_neuron(move(preSynapticNeuron)),
+                                         post_synaptic_neuron(move(postSynapticNeuron)) {
     if (random_strength) {
-        float rand_strength = rand_float() - 1; // remap it to [-0.5, 0.5]
+        float rand_strength = randUniform() - 1; // remap it to [-0.5, 0.5]
+        rand_strength *= 0.5;
+
         base_strength = rand_strength;
         current_strength = rand_strength;
     }
@@ -39,4 +42,12 @@ void Synapse::tick(int timestep) {
 
 float Synapse::getCurrentStrength() const {
     return current_strength;
+}
+
+const std::shared_ptr<Neuron> &Synapse::getPreSynapticNeuron() const {
+    return pre_synaptic_neuron;
+}
+
+const std::shared_ptr<Neuron> &Synapse::getPostSynapticNeuron() const {
+    return post_synaptic_neuron;
 }

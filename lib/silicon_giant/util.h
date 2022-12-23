@@ -14,6 +14,10 @@ float lerp(float a, float b, float t);
 
 ///
 /// \return random float between 0 and 1 (uniform distribution)
-float rand_float();
+float randUniform();
+
+///
+/// \return random float with a normal distribution centered at 0 and mean of 1
+float randNormal();
 
 #endif //SILICON_GIANT_UTIL_H

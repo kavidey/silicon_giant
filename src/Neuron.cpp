@@ -60,3 +60,19 @@ float Neuron::probe() const {
 bool Neuron::isInRefractoryPeriod() const {
     return in_refractory_period;
 }
+
+const std::list<std::shared_ptr<Synapse>> &Neuron::getOutgoingSynapses() const {
+    return outgoing_synapses;
+}
+
+const std::list<std::shared_ptr<Synapse>> &Neuron::getIncomingSynapses() const {
+    return incoming_synapses;
+}
+
+void Neuron::remove_incoming_synapse(const std::shared_ptr<Synapse>& synapse) {
+    incoming_synapses.remove(synapse);
+}
+
+void Neuron::remove_outgoing_synapse(const std::shared_ptr<Synapse>& synapse) {
+    outgoing_synapses.remove(synapse);
+}

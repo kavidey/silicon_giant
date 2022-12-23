@@ -8,7 +8,7 @@
 #include <memory>
 #include "Neuron.h"
 
-const float BASE_STRENGTH = 0.5;
+const float BASE_STRENGTH = 0.25;
 const float CURRENT_STRENGTH_DECREASE_RATE = 0.99;
 const float FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH = 0.1;
 
@@ -20,10 +20,12 @@ class Synapse {
     float base_strength = BASE_STRENGTH;
     float current_strength = BASE_STRENGTH;
     int last_fired = -LTP_TIME;
+    std::shared_ptr<Neuron> pre_synaptic_neuron;
     std::shared_ptr<Neuron> post_synaptic_neuron;
 
 public:
-    Synapse(const std::shared_ptr<Neuron> &postSynapticNeuron, bool random_strength);
+    Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::shared_ptr<Neuron> &postSynapticNeuron,
+            bool random_strength);
 
     /// Simulates the neuron for one timestep
     /// \param timestep current simulation timestep
@@ -40,6 +42,10 @@ public:
     void post_synaptic_neuron_fired(int timestep);
 
     float getCurrentStrength() const;
+
+    const std::shared_ptr<Neuron> &getPreSynapticNeuron() const;
+
+    const std::shared_ptr<Neuron> &getPostSynapticNeuron() const;
 
 private:
     /// Updates \p base_strength based on the delay between this synapse firing and the \p post_synaptic_neuron firing

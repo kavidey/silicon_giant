@@ -42,7 +42,14 @@ public:
     void add_outgoing_synapse(const std::shared_ptr<Synapse>& synapse);
     void add_incoming_synapse(const std::shared_ptr<Synapse>& synapse);
 
+    const std::list<std::shared_ptr<Synapse>> &getOutgoingSynapses() const;
+
+    const std::list<std::shared_ptr<Synapse>> &getIncomingSynapses() const;
+
     float probe() const;
+
+    void remove_incoming_synapse(const std::shared_ptr<Synapse>& synapse);
+    void remove_outgoing_synapse(const std::shared_ptr<Synapse>& synapse);
 };
 
 
