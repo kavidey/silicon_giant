@@ -8,14 +8,14 @@
 #include <algorithm>
 
 
-Network::Network() {}
+Network::Network() = default;
 
 void Network::tick() {
-    for (std::shared_ptr<Neuron> neuron: neurons) {
+    for (const std::shared_ptr<Neuron>& neuron: neurons) {
         neuron->tick(timestep);
     }
 
-    for (std::shared_ptr<Synapse> synapse: synapses) {
+    for (const std::shared_ptr<Synapse>& synapse: synapses) {
         synapse->tick(timestep);
     }
 
@@ -24,16 +24,16 @@ void Network::tick() {
     timestep++;
 }
 
-void Network::add_neuron(std::shared_ptr<Neuron> neuron) {
+void Network::add_neuron(const std::shared_ptr<Neuron>& neuron) {
     neurons.push_back(neuron);
 }
 
-void Network::remove_neuron(std::shared_ptr<Neuron> neuron) {
+void Network::remove_neuron(const std::shared_ptr<Neuron>& neuron) {
     neurons.remove(neuron);
 }
 
 void
-Network::add_connection(std::shared_ptr<Neuron> pre_synaptic_neuron, std::shared_ptr<Neuron> post_synaptic_neuron) {
+Network::add_connection(const std::shared_ptr<Neuron>& pre_synaptic_neuron, const std::shared_ptr<Neuron>& post_synaptic_neuron) {
     // Make sure that both neurons are in already in the list
     if ((std::find(neurons.begin(), neurons.end(), pre_synaptic_neuron) != neurons.end()) &&
         (std::find(neurons.begin(), neurons.end(), post_synaptic_neuron) != neurons.end())) {

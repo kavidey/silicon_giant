@@ -25,11 +25,11 @@ void Neuron::tick(int timestep) {
 }
 
 void Neuron::fire(int timestep) {
-    for (std::shared_ptr<Synapse> synapse: outgoing_synapses) {
+    for (const std::shared_ptr<Synapse>& synapse: outgoing_synapses) {
         synapse->fire(0, charge);
     }
 
-    for (std::shared_ptr<Synapse> synapse: incoming_synapses) {
+    for (const std::shared_ptr<Synapse>& synapse: incoming_synapses) {
         synapse->post_synaptic_neuron_fired(timestep);
     }
 
@@ -43,10 +43,10 @@ void Neuron::receive(float incoming_charge) {
     }
 }
 
-void Neuron::add_outgoing_synapse(std::shared_ptr<Synapse> synapse) {
+void Neuron::add_outgoing_synapse(const std::shared_ptr<Synapse>& synapse) {
     outgoing_synapses.push_back(synapse);
 }
 
-void Neuron::add_incoming_synapse(std::shared_ptr<Synapse> synapse) {
+void Neuron::add_incoming_synapse(const std::shared_ptr<Synapse>& synapse) {
     incoming_synapses.push_back(synapse);
 }
