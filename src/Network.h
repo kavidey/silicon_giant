@@ -17,10 +17,12 @@ class Network {
 public:
     Network();
 
+    int getTimestep() const;
+
     void tick();
     void add_neuron(const std::shared_ptr<Neuron>& neuron);
     void remove_neuron(const std::shared_ptr<Neuron>& neuron);
-    void add_connection(const std::shared_ptr<Neuron>& pre_synaptic_neuron, const std::shared_ptr<Neuron>& post_synaptic_neuron);
+    std::shared_ptr<Synapse> add_connection(const std::shared_ptr<Neuron>& pre_synaptic_neuron, const std::shared_ptr<Neuron>& post_synaptic_neuron);
 };
 
 

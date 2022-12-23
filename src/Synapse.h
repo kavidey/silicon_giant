@@ -39,6 +39,8 @@ public:
     /// \param timestep current simulation timestep
     void post_synaptic_neuron_fired(int timestep);
 
+    float getCurrentStrength() const;
+
 private:
     /// Updates \p base_strength based on the delay between this synapse firing and the \p post_synaptic_neuron firing
     /// If the two neurons fire with in the time interval defined by \p LTP_TIME the synapse will be strengthened,

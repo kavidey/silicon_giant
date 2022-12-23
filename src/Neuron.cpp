@@ -4,7 +4,7 @@
 
 #include "Neuron.h"
 #include "Synapse.h"
-#include "util.h"
+#include "../lib/silicon_giant/util.h"
 
 Neuron::Neuron() {}
 
@@ -50,4 +50,16 @@ void Neuron::add_outgoing_synapse(const std::shared_ptr<Synapse>& synapse) {
 
 void Neuron::add_incoming_synapse(const std::shared_ptr<Synapse>& synapse) {
     incoming_synapses.push_back(synapse);
+}
+
+float Neuron::probe() const {
+    return charge;
+}
+
+void Neuron::stimulate(float charge) {
+    Neuron::charge = charge;
+}
+
+bool Neuron::isInRefractoryPeriod() const {
+    return in_refractory_period;
 }

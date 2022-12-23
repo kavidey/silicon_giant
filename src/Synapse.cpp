@@ -4,7 +4,7 @@
 
 #include "Synapse.h"
 #include "Neuron.h"
-#include "util.h"
+#include "../lib/silicon_giant/util.h"
 
 Synapse::Synapse(const std::shared_ptr<Neuron> &postSynapticNeuron) : post_synaptic_neuron(move(postSynapticNeuron)) {}
 
@@ -26,4 +26,8 @@ void Synapse::long_term_potentiation(int timestep) {
 
 void Synapse::tick(int timestep) {
     current_strength = lerp(base_strength, current_strength, CURRENT_STRENGTH_DECREASE_RATE);
+}
+
+float Synapse::getCurrentStrength() const {
+    return current_strength;
 }

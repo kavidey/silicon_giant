@@ -32,14 +32,23 @@ void Network::remove_neuron(const std::shared_ptr<Neuron>& neuron) {
     neurons.remove(neuron);
 }
 
-void
+std::shared_ptr<Synapse>
 Network::add_connection(const std::shared_ptr<Neuron>& pre_synaptic_neuron, const std::shared_ptr<Neuron>& post_synaptic_neuron) {
     // Make sure that both neurons are in already in the list
     if ((std::find(neurons.begin(), neurons.end(), pre_synaptic_neuron) != neurons.end()) &&
         (std::find(neurons.begin(), neurons.end(), post_synaptic_neuron) != neurons.end())) {
          auto synapse = std::make_shared<Synapse>(post_synaptic_neuron);
+
          synapses.push_back(synapse);
+         pre_synaptic_neuron->add_outgoing_synapse(synapse);
+         post_synaptic_neuron->add_incoming_synapse(synapse);
+
+         return synapse;
     } else {
         throw std::invalid_argument( "one or both of the input neurons have not been added yet" );
     }
+}
+
+int Network::getTimestep() const {
+    return timestep;
 }
