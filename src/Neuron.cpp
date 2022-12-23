@@ -11,7 +11,7 @@ Neuron::Neuron() {}
 void Neuron::tick(int timestep) {
     if (in_refractory_period) {
         // Exit refractory period if ready
-        if (timestep - last_fired < REFRACTORY_TIME) {
+        if (timestep - last_fired >= REFRACTORY_TIME) {
             in_refractory_period = false;
             charge = DEFAULT_CHARGE;
         }
@@ -36,6 +36,7 @@ void Neuron::fire(int timestep) {
 
     in_refractory_period = true;
     charge = DEFAULT_CHARGE; // I think this is redundant
+    last_fired = timestep;
 }
 
 void Neuron::stimulate(float incoming_charge) {

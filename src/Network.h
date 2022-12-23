@@ -12,7 +12,7 @@
 class Network {
     std::list<std::shared_ptr<Neuron>> neurons = {};
     std::list<std::shared_ptr<Synapse>> synapses = {};
-    int timestep = 0;
+    int timestep = 0; // there are 100 steps per ms
 
 public:
     Network();

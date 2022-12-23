@@ -11,7 +11,7 @@
 const float DEFAULT_CHARGE = -70; // mV
 const float ACTION_POTENTIAL_THRESHOLD = 55; // mV
 const float CHARGE_DECREASE_RATE = 0.98; // %
-const int REFRACTORY_TIME = 100;
+const int REFRACTORY_TIME = 100; // 1 ms
 
 class Synapse;
 
