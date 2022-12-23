@@ -41,11 +41,11 @@ public:
     /// \param timestep current simulation timestep
     void post_synaptic_neuron_fired(int timestep);
 
-    float getCurrentStrength() const;
+    [[nodiscard]] float getCurrentStrength() const;
 
-    const std::shared_ptr<Neuron> &getPreSynapticNeuron() const;
+    [[nodiscard]] const std::shared_ptr<Neuron> &getPreSynapticNeuron() const;
 
-    const std::shared_ptr<Neuron> &getPostSynapticNeuron() const;
+    [[nodiscard]] const std::shared_ptr<Neuron> &getPostSynapticNeuron() const;
 
 private:
     /// Updates \p base_strength based on the delay between this synapse firing and the \p post_synaptic_neuron firing

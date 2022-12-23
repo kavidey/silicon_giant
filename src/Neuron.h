@@ -9,8 +9,9 @@
 #include <memory>
 
 const float DEFAULT_CHARGE = -70; // mV
+const float DEFAULT_FIRE_CHARGE = 50; // mV
 const float ACTION_POTENTIAL_THRESHOLD = 55; // mV
-const float CHARGE_DECREASE_RATE = 0.98; // %
+const float CHARGE_DECREASE_RATE = 0.9999; // %
 const int REFRACTORY_TIME = 100; // 1 ms
 
 class Synapse;
@@ -33,7 +34,7 @@ public:
     /// \param timestep current simulation timestep
     void fire(int timestep);
 
-    bool isInRefractoryPeriod() const;
+    [[nodiscard]] bool isInRefractoryPeriod() const;
 
     /// Receives charge from an incoming synapse
     /// \param incoming_charge the amount of electrical charge (in mV)
@@ -42,11 +43,11 @@ public:
     void add_outgoing_synapse(const std::shared_ptr<Synapse>& synapse);
     void add_incoming_synapse(const std::shared_ptr<Synapse>& synapse);
 
-    const std::list<std::shared_ptr<Synapse>> &getOutgoingSynapses() const;
+    [[nodiscard]] const std::list<std::shared_ptr<Synapse>> &getOutgoingSynapses() const;
 
-    const std::list<std::shared_ptr<Synapse>> &getIncomingSynapses() const;
+    [[nodiscard]] const std::list<std::shared_ptr<Synapse>> &getIncomingSynapses() const;
 
-    float probe() const;
+    [[nodiscard]] float probe() const;
 
     void remove_incoming_synapse(const std::shared_ptr<Synapse>& synapse);
     void remove_outgoing_synapse(const std::shared_ptr<Synapse>& synapse);

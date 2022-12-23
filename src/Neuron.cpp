@@ -28,7 +28,7 @@ void Neuron::tick(int timestep) {
 void Neuron::fire(int timestep) {
     DEBUG(incoming_synapses.front()->getPostSynapticNeuron() << " fired")
     for (const std::shared_ptr<Synapse>& synapse: outgoing_synapses) {
-        synapse->fire(0, charge);
+        synapse->fire(0, DEFAULT_FIRE_CHARGE);
     }
 
     for (const std::shared_ptr<Synapse>& synapse: incoming_synapses) {

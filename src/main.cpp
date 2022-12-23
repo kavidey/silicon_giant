@@ -24,7 +24,7 @@ int main() {
 
 
     int num_neurons = network.getNumNeurons();
-    for (int i = 0; i < num_neurons * 2; i++) {
+    for (int i = 0; i < num_neurons * 20; i++) {
         bool valid_synapse = false;
         while (!valid_synapse) {
             int pre_index = (int) (randUniform() * num_neurons);
@@ -44,18 +44,22 @@ int main() {
 
 //    std::shared_ptr<Synapse> synapse = network.add_connection(a, b);
 
-//    while (b->probe() == -70) {
-//        a->stimulate(50);
-//        network.tick();
-//    }
-
-    for (int i = 0; i < 1000; i++) {
+    while (b->probe() == -70) {
         a->stimulate(50);
-//        std::cout << a->isInRefractoryPeriod() << std::endl;
+        network.tick();
+    }
+
+    for (int i = 0; i < 100; i++) {
+        a->stimulate(50);
         std::cout << b->probe() << std::endl;
         network.tick();
     }
 
-    std::cout << network.get_dotvis_representation() << std::endl;
+//    for (std::shared_ptr<Synapse> synapse: a->getOutgoingSynapses()) {
+//        std::cout << synapse->getPostSynapticNeuron() << " " << synapse->getCurrentStrength() << " " << synapse->getPostSynapticNeuron()->probe() << std::endl;
+//    }
+
+//    std::cout << network.get_dotvis_representation() << std::endl;
+//    std::cout << network.get_csv_representation() << std::endl;
     return 0;
 }

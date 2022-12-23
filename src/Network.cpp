@@ -100,3 +100,13 @@ std::string Network::get_dotvis_representation() {
     return result;
 }
 
+std::string Network::get_csv_representation() {
+    std::string result = "source, target\n";
+    for (const std::shared_ptr<Synapse>& synapse: synapses) {
+        char str[100];
+        snprintf(str, 100, "%p, %p\n", synapse->getPreSynapticNeuron().get(), synapse->getPostSynapticNeuron().get());
+        result += str;
+    }
+    return result;
+}
+

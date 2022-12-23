@@ -19,10 +19,12 @@
   <component name="ChangeListManager">
     <list default="true" id="c32ecf9f-336f-44e2-b8a9-943bfe9d9f73" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/silicon_giant/util.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/silicon_giant/util.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/silicon_giant/util.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/silicon_giant/util.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Network.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Network.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Neuron.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Neuron.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Synapse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Synapse.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Synapse.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Synapse.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -82,7 +84,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1671830963008</updated>
-      <workItem from="1671830964106" duration="4056000" />
+      <workItem from="1671830964106" duration="7220000" />
     </task>
     <servers />
   </component>

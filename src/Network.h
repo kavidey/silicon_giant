@@ -49,6 +49,7 @@ public:
     static bool are_connected(const std::shared_ptr<Neuron>& pre_synaptic_neuron, const std::shared_ptr<Neuron>& post_synaptic_neuron);
 
     std::string get_dotvis_representation();
+    std::string get_csv_representation();
 };
 
 
