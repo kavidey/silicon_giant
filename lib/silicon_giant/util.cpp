@@ -3,7 +3,7 @@
 //
 
 #include <random>
-
+#include <iostream>
 #include "util.h"
 
 float lerp(float a, float b, float t) {

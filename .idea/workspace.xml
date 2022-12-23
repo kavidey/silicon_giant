@@ -13,13 +13,16 @@
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
-      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DDEBUG_LEVEL=1" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c32ecf9f-336f-44e2-b8a9-943bfe9d9f73" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Synapse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Synapse.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/silicon_giant/util.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/silicon_giant/util.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/silicon_giant/util.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/silicon_giant/util.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Neuron.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +58,7 @@
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "settings.editor.selected.configurable": "CPPToolchains",
+    "settings.editor.selected.configurable": "CMakeSettings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -79,7 +82,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1671830963008</updated>
-      <workItem from="1671830964106" duration="2532000" />
+      <workItem from="1671830964106" duration="4056000" />
     </task>
     <servers />
   </component>

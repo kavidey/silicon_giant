@@ -44,12 +44,18 @@ int main() {
 
 //    std::shared_ptr<Synapse> synapse = network.add_connection(a, b);
 
-    for (int i = 0; i < 100000; i++) {
+//    while (b->probe() == -70) {
+//        a->stimulate(50);
+//        network.tick();
+//    }
+
+    for (int i = 0; i < 1000; i++) {
         a->stimulate(50);
 //        std::cout << a->isInRefractoryPeriod() << std::endl;
         std::cout << b->probe() << std::endl;
         network.tick();
     }
+
     std::cout << network.get_dotvis_representation() << std::endl;
     return 0;
 }
