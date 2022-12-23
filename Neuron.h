@@ -5,7 +5,7 @@
 #ifndef SILICON_GIANT_NEURON_H
 #define SILICON_GIANT_NEURON_H
 
-#include <vector>
+#include <list>
 #include <memory>
 #include "Synapse.h"
 
@@ -18,8 +18,8 @@ class Neuron {
     int last_fired = -REFRACTORY_TIME;
     bool in_refractory_period = false;
     float charge = DEFAULT_CHARGE;
-    std::vector<std::shared_ptr<Synapse>> outgoing_synapses;
-    std::vector<std::shared_ptr<Synapse>> incoming_synapses;
+    std::list<std::shared_ptr<Synapse>> outgoing_synapses;
+    std::list<std::shared_ptr<Synapse>> incoming_synapses;
 
 public:
     Neuron();

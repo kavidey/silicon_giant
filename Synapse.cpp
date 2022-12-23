@@ -3,9 +3,10 @@
 //
 
 #include "Synapse.h"
+#include "Neuron.h"
 #include "util.h"
 
-Synapse::Synapse(const std::shared_ptr<Neuron> &postSynapticNeuron) : post_synaptic_neuron(postSynapticNeuron) {}
+Synapse::Synapse(const std::shared_ptr<Neuron> &postSynapticNeuron) : post_synaptic_neuron(move(postSynapticNeuron)) {}
 
 void Synapse::fire(int timestep, float charge) {
     post_synaptic_neuron->receive(charge * current_strength);
