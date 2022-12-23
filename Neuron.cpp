@@ -3,6 +3,7 @@
 //
 
 #include "Neuron.h"
+#include "Synapse.h"
 #include "util.h"
 
 Neuron::Neuron() {}
