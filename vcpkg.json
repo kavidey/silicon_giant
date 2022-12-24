@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "silicon-giant",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "fmt",
+    "glfw3",
+    "glad",
+    "glm",
+    "freetype",
+    {
+      "name": "imgui",
+      "default-features": false,
+      "features": ["glfw-binding", "osx-binding", "freetype", "opengl3-binding", "docking-experimental"]
+    }
+  ]
+}
