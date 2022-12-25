@@ -96,7 +96,7 @@ void render_ui() {
 
     if (ImGui::Button("Reset")) {
         simulating = false;
-        network.reset();
+        network->reset();
     }
 
     static int sim_speed = 1;
@@ -292,7 +292,7 @@ void render_ui() {
 
         ImGui::Spacing();
         bool monitored = false;
-        for (auto monitor: neuron_monitor) {
+        for (const auto& monitor: neuron_monitor) {
             if (monitor.first == selected_neuron) {
                 monitored = true;
             }
@@ -306,6 +306,6 @@ void render_ui() {
     }
     ImGui::End();
 
-    ImGui::ShowDemoWindow();
+//    ImGui::ShowDemoWindow();
 //    ImPlot::ShowDemoWindow();
 }

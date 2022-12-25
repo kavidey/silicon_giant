@@ -83,6 +83,7 @@ void Neuron::reset() {
     last_fired = -REFRACTORY_TIME;
     in_refractory_period = false;
     charge = BASELINE_CHARGE;
+//    pos = {0, 0};
 }
 
 int Neuron::getId() const {
