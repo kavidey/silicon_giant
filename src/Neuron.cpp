@@ -13,14 +13,14 @@ void Neuron::tick(int timestep) {
         // Exit refractory period if ready
         if (timestep - last_fired >= REFRACTORY_TIME) {
             in_refractory_period = false;
-            charge = DEFAULT_CHARGE;
+            charge = BASELINE_CHARGE;
         }
     } else {
         // Update charge and fire if ready
         if (charge >= ACTION_POTENTIAL_THRESHOLD) {
             fire(timestep);
         } else {
-            charge = lerp(DEFAULT_CHARGE, charge, CHARGE_DECREASE_RATE);
+            charge = lerp(BASELINE_CHARGE, charge, CHARGE_DECREASE_RATE);
         }
     }
 }
@@ -36,13 +36,13 @@ void Neuron::fire(int timestep) {
     }
 
     in_refractory_period = true;
-    charge = DEFAULT_CHARGE; // I think this is redundant
+    charge = BASELINE_CHARGE; // I think this is redundant
     last_fired = timestep;
 }
 
 void Neuron::stimulate(float incoming_charge) {
     if (!in_refractory_period) {
-        charge += incoming_charge;
+        charge = std::max(charge + incoming_charge, MINIMUM_POSSIBLE_CHARGE);
     }
 }
 
@@ -81,5 +81,5 @@ void Neuron::remove_outgoing_synapse(const std::shared_ptr<Synapse>& synapse) {
 void Neuron::reset() {
     last_fired = -REFRACTORY_TIME;
     in_refractory_period = false;
-    charge = DEFAULT_CHARGE;
+    charge = BASELINE_CHARGE;
 }

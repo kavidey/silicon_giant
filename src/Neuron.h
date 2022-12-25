@@ -8,9 +8,10 @@
 #include <list>
 #include <memory>
 
-const float DEFAULT_CHARGE = -70; // mV
+const float BASELINE_CHARGE = -70; // mV
 const float DEFAULT_FIRE_CHARGE = 50; // mV
 const float ACTION_POTENTIAL_THRESHOLD = 55; // mV
+const float MINIMUM_POSSIBLE_CHARGE = -100; // mV
 const float CHARGE_DECREASE_RATE = 0.9999; // %
 const int REFRACTORY_TIME = 100; // 1 ms
 
@@ -19,7 +20,7 @@ class Synapse;
 class Neuron {
     int last_fired = -REFRACTORY_TIME;
     bool in_refractory_period = false;
-    float charge = DEFAULT_CHARGE;
+    float charge = BASELINE_CHARGE;
     std::list<std::shared_ptr<Synapse>> outgoing_synapses;
     std::list<std::shared_ptr<Synapse>> incoming_synapses;
 

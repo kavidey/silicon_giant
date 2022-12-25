@@ -10,7 +10,7 @@
 
 const float DEFAULT_BASE_STRENGTH = 0.25;
 const float CURRENT_STRENGTH_DECREASE_RATE = 0.99;
-const float FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH = 0.1;
+const float FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH = 1.05;
 
 // Long Term Potentiation (LTP) consts
 const int LTP_TIME = 1500;

@@ -13,17 +13,17 @@
 class Network {
     std::list<std::shared_ptr<Neuron>> neurons = {};
     std::list<std::shared_ptr<Synapse>> synapses = {};
-    int timestep = 0; // there are 100 steps per ms
+    int timestep = 0; // there are 100 steps per ms (this is in microseconds)
 
 public:
     Network();
 
     ///
     /// \return current simulation timestep
-    int getTimestep() const;
+    [[nodiscard]] int getTimestep() const;
 
-    int getNumNeurons() const;
-    const std::shared_ptr<Neuron> &getNeuronByIndex(int i) const;
+    [[nodiscard]] int getNumNeurons() const;
+    [[nodiscard]] const std::shared_ptr<Neuron> &getNeuronByIndex(int i) const;
 
     /// Advances the simulation by one timestep
     void tick();

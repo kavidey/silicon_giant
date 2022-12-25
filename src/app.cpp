@@ -2,6 +2,7 @@
 #include "imgui.h"
 #include "implot.h"
 #include <boost/circular_buffer.hpp>
+#include "vector"
 
 #include "Network.h"
 #include "Neuron.h"
@@ -13,14 +14,21 @@ Network network;
 std::shared_ptr<Neuron> a;
 std::shared_ptr<Neuron> b;
 
+std::vector<std::pair<std::shared_ptr<Neuron>, std::shared_ptr<boost::circular_buffer<float>>>> neuron_monitor;
+
 void setup() {
     network = Network();
 
     a = std::make_shared<Neuron>();
     b = std::make_shared<Neuron>();
 
+    // Monitor A and B in the UI
+    neuron_monitor.emplace_back(a, std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
+    neuron_monitor.emplace_back(b, std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
+
     for (int i = 0; i < 10; i++) {
         network.add_neuron(std::make_shared<Neuron>());
+        neuron_monitor.emplace_back(network.getNeuronByIndex(i), std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
     }
     network.add_neuron(a);
     for (int i = 0; i < 100; i++) {
@@ -44,7 +52,7 @@ void setup() {
 
             std::shared_ptr<Neuron> pre_neuron = network.getNeuronByIndex(pre_index);
             std::shared_ptr<Neuron> post_neuron = network.getNeuronByIndex(post_index);
-            if (post_index != pre_index && !network.are_connected(pre_neuron, post_neuron) && !network.are_connected(post_neuron, pre_neuron)) {
+            if (post_index != pre_index && !Network::are_connected(pre_neuron, post_neuron) && !Network::are_connected(post_neuron, pre_neuron)) {
                 network.add_connection(pre_neuron, post_neuron);
                 valid_synapse = true;
             }
@@ -73,7 +81,12 @@ void setup() {
 }
 
 void render_ui() {
-    ImGui::Begin("Settings");
+    ImGui::Begin("Control");
+
+    // This doesn't work. For some reason it rounds to an int
+//    ImGui::Text("Sim Time: %3.f s", ((float) network.getTimestep()) / 1000.0f);
+    ImGui::Text("Sim Time: %d us", network.getTimestep());
+
     static bool simulating = false;
     if (!simulating) {
         simulating = ImGui::Button("Start");
@@ -89,49 +102,44 @@ void render_ui() {
     static int sim_speed = 1;
     ImGui::DragInt("Simulation Speed", &sim_speed, 0, 1, 10, "%dx");
 
-    static boost::circular_buffer<float> a_charge(500);
-    static boost::circular_buffer<float> b_charge(500);
+
+
     if (simulating) {
         for (int i = 0; i < sim_speed; i++) {
             a->stimulate(50);
             network.tick();
 
-            a_charge.push_back(a->probe());
-            b_charge.push_back(b->probe());
+            for (auto monitor: neuron_monitor) {
+                monitor.second->push_back(monitor.first->probe());
+            }
         }
     }
 
-    a_charge.linearize();
-    b_charge.linearize();
+    for (auto monitor: neuron_monitor) {
+        monitor.second->linearize();
+    }
 
     static ImGuiTableFlags flags = ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV |
                                    ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable;
     ImGui::BeginTable("##table", 3, flags, ImVec2(-1, 0));
-    ImGui::TableSetupColumn("Neuron ID", ImGuiTableColumnFlags_WidthFixed, 1000.0f);
+    ImGui::TableSetupColumn("Neuron ID", ImGuiTableColumnFlags_WidthFixed, 200.0f);
     ImGui::TableSetupColumn("Voltage", ImGuiTableColumnFlags_WidthFixed, 75.0f);
     ImGui::TableSetupColumn("Signal");
     ImGui::TableHeadersRow();
     ImPlot::PushColormap(ImPlotColormap_Cool);
 
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::Text("%p", a.get());
-    ImGui::TableSetColumnIndex(1);
-    ImGui::Text("%.2f mV", a->probe());
-    ImGui::TableSetColumnIndex(2);
-    ImGui::PushID(0);
-    Sparkline("##spark", a_charge.array_one().first, a_charge.array_one().second, -100.0f, 100.0f, 0, ImPlot::GetColormapColor(0),ImVec2(-1, 35));
-    ImGui::PopID();
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::Text("%p", b.get());
-    ImGui::TableSetColumnIndex(1);
-    ImGui::Text("%.2f mV", b->probe());
-    ImGui::TableSetColumnIndex(2);
-    ImGui::PushID(1);
-    Sparkline("##spark", b_charge.array_one().first, b_charge.array_one().second, -100.0f, 100.0f, 0, ImPlot::GetColormapColor(1),ImVec2(-1, 35));
-    ImGui::PopID();
+    for (int i = 0; i < neuron_monitor.size(); i++) {
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text("%p", neuron_monitor[i].first.get());
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text("%.2f mV", neuron_monitor[i].first->probe());
+        ImGui::TableSetColumnIndex(2);
+        ImGui::PushID(i);
+        auto buffer_to_array = neuron_monitor[i].second->array_one();
+        Sparkline("##spark", buffer_to_array.first, buffer_to_array.second, MINIMUM_POSSIBLE_CHARGE, 100.0f, 0, ImPlot::GetColormapColor(i),ImVec2(-1, 35));
+        ImGui::PopID();
+    }
 
     ImPlot::PopColormap();
     ImGui::EndTable();

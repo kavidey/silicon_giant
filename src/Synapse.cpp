@@ -19,7 +19,7 @@ Synapse::Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::sh
 
 void Synapse::fire(int timestep, float charge) {
     post_synaptic_neuron->stimulate(charge * current_strength);
-    current_strength += FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH;
+    current_strength *= FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH;
     last_fired = timestep;
 }
 
@@ -62,7 +62,7 @@ void Synapse::reset(bool random_strength) {
 }
 
 float Synapse::generate_random_strength() {
-    float rand_strength = randUniform() - 0.5; // remap it to [-0.5, 0.5]
+    float rand_strength = randUniform() - 0.2;
     rand_strength *= 2;
 
     return rand_strength;

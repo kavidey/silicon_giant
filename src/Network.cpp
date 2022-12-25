@@ -117,5 +117,7 @@ void Network::reset() {
     for (const std::shared_ptr<Synapse> &synapse: synapses) {
         synapse->reset(true);
     }
+
+    timestep = 0;
 }
 
