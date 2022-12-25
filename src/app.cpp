@@ -14,14 +14,14 @@
 #include "../lib/silicon_giant/util.h"
 #include "../lib/silicon_giant/ui.h"
 
-Network network;
+std::shared_ptr<Network> network;
 std::shared_ptr<Neuron> a;
 std::shared_ptr<Neuron> b;
 
 std::vector<std::pair<std::shared_ptr<Neuron>, std::shared_ptr<boost::circular_buffer<float>>>> neuron_monitor;
 
 void setup_network() {
-    network = Network();
+    network = std::make_unique<Network>();
 
     a = std::make_shared<Neuron>();
     b = std::make_shared<Neuron>();
@@ -31,21 +31,21 @@ void setup_network() {
     neuron_monitor.emplace_back(b, std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
 
     for (int i = 0; i < 10; i++) {
-        network.add_neuron(std::make_shared<Neuron>());
-        neuron_monitor.emplace_back(network.getNeuronByIndex(i),
+        network->add_neuron(std::make_shared<Neuron>());
+        neuron_monitor.emplace_back(network->getNeuronByIndex(i),
                                     std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
     }
-    network.add_neuron(a);
+    network->add_neuron(a);
     for (int i = 0; i < 100; i++) {
-        network.add_neuron(std::make_shared<Neuron>());
+        network->add_neuron(std::make_shared<Neuron>());
     }
-    network.add_neuron(b);
+    network->add_neuron(b);
     for (int i = 0; i < 10; i++) {
-        network.add_neuron(std::make_shared<Neuron>());
+        network->add_neuron(std::make_shared<Neuron>());
     }
 
 
-    int num_neurons = network.getNumNeurons();
+    int num_neurons = network->getNumNeurons();
     for (int i = 0; i < num_neurons * 20; i++) {
         bool valid_synapse = false;
         while (!valid_synapse) {
@@ -55,11 +55,11 @@ void setup_network() {
                 post_index = (randNormal() * 20) + pre_index;
             }
 
-            std::shared_ptr<Neuron> pre_neuron = network.getNeuronByIndex(pre_index);
-            std::shared_ptr<Neuron> post_neuron = network.getNeuronByIndex(post_index);
+            std::shared_ptr<Neuron> pre_neuron = network->getNeuronByIndex(pre_index);
+            std::shared_ptr<Neuron> post_neuron = network->getNeuronByIndex(post_index);
             if (post_index != pre_index && !Network::are_connected(pre_neuron, post_neuron) &&
                 !Network::are_connected(post_neuron, pre_neuron)) {
-                network.add_connection(pre_neuron, post_neuron);
+                network->add_connection(pre_neuron, post_neuron);
                 valid_synapse = true;
             }
         }
@@ -84,7 +84,9 @@ void render_ui() {
 
     // This doesn't work. For some reason it rounds to an int
 //    ImGui::Text("Sim Time: %3.f s", ((float) network.getTimestep()) / 1000.0f);
-    ImGui::Text("Sim Time: %d us", network.getTimestep());
+    ImGui::Text("Sim Time: %d us", network->getTimestep());
+
+    ImGui::Separator();
 
     static bool simulating = false;
     if (!simulating) {
@@ -99,19 +101,31 @@ void render_ui() {
         network.reset();
     }
 
+    static int sim_speed = 1;
+    ImGui::SliderInt("Speed", &sim_speed, 1, 1000, "%dx", ImGuiSliderFlags_Logarithmic);
+
+    ImGui::Spacing();
+
     bool reset_network_viz = false;
-    if (ImGui::Button("Reset Network Visualization")) {
-        reset_network_viz = true;
+    static bool show_refractory_period = true;
+    static float scale = 2.0f;
+
+    if (ImGui::CollapsingHeader("Visualization Settings"))
+    {
+        if (ImGui::Button("Reset Network Visualization")) {
+            reset_network_viz = true;
+        }
+
+        ImGui::SliderFloat("Scale", &scale, 0, 5, "%.3fx");
+        ImGui::Checkbox("Display Neuron Refractory Period", &show_refractory_period);
     }
 
-    static int sim_speed = 1;
-    ImGui::DragInt("Speed", &sim_speed, 0, 1, 10, "%dx");
     ImGui::End();
 
     if (simulating) {
         for (int i = 0; i < sim_speed; i++) {
             a->stimulate(50);
-            network.tick();
+            network->tick();
 
             for (auto monitor: neuron_monitor) {
                 monitor.second->push_back(monitor.first->probe());
@@ -124,8 +138,8 @@ void render_ui() {
     }
 
     ImGui::Begin("Monitoring", nullptr, window_flags);
-    static ImGuiTableFlags flags = ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV |
-                                   ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable;
+    static ImGuiTableFlags flags = ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_RowBg |
+                                   ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable;
     ImGui::BeginTable("##table", 3, flags, ImVec2(-1, 0));
     ImGui::TableSetupColumn("Neuron ID", ImGuiTableColumnFlags_WidthFixed, 200.0f);
     ImGui::TableSetupColumn("Voltage", ImGuiTableColumnFlags_WidthFixed, 75.0f);
@@ -157,7 +171,7 @@ void render_ui() {
     ImGui::Begin("Network", nullptr, window_flags);
 
     // Generate Graph and Positions
-    static Graph g = network.to_graph();
+    static Graph g = network->to_graph();
     PositionVec position_vec(boost::num_vertices(g));
     PositionMap positions(position_vec.begin(), get(boost::vertex_index, g));
 
@@ -168,7 +182,7 @@ void render_ui() {
     static boost::rectangle_topology topo(gen, -width / 2, -height / 2, width / 2, height / 2);
 //    boost::random_graph_layout(g, positions, topo);
 
-    for (auto neuron: network.getNeurons()) {
+    for (auto neuron: network->getNeurons()) {
         if (neuron->getPos().x == 0 and neuron->getPos().y == 0) {
             neuron->setPos({(randUniform() - 0.5) * width, (randUniform() - 0.5) * height});
         }
@@ -204,8 +218,8 @@ void render_ui() {
     if (reset_network_viz) {
         temp = max_temp;
 
-        for (auto neuron: network.getNeurons()) {
-            neuron->setPos({0,0});
+        for (const auto& neuron: network->getNeurons()) {
+            neuron->setPos({0, 0});
         }
     }
 
@@ -216,39 +230,46 @@ void render_ui() {
     ImVec2 canvas_sz = ImGui::GetContentRegionAvail();   // Resize canvas to what's available
     const ImVec2 p = ImGui::GetCursorScreenPos();
 
-    static float sz = 5.0f;
+    static float sz = 10.0f;
     float x_offset = p.x + canvas_sz.x / 2 + sz * 0.5f;
     float y_offset = p.y + canvas_sz.y / 2 + sz * 0.5f;
 
-
     boost::graph_traits<Graph>::vertex_iterator vj, vj_end;
-    for (boost::tie(vj, vj_end) = boost::vertices(g); vj != vj_end; ++vj)
-    {
+    for (boost::tie(vj, vj_end) = boost::vertices(g); vj != vj_end; ++vj) {
         boost::get(boost::vertex_name, g, *vj)->setPos({positions[*vj][0], positions[*vj][1]});
     }
 
-    for (auto synapse: network.getSynapses()) {
+    for (const auto& synapse: network->getSynapses()) {
+        float strength = std::abs(synapse->getCurrentStrength());
         ImColor col;
         if (synapse->getCurrentStrength() > 0) {
-            col = ImColor(0,(int) (synapse->getCurrentStrength()*255),0);
+            col = ImColor(0, 255, 0, (int) (strength * 200));
         } else {
-            col = ImColor((int) (synapse->getCurrentStrength()*-255),0,0);
+            col = ImColor(255, 0, 0, (int) (strength * 200));
         }
-        draw_list->AddLine(ImVec2(synapse->getPreSynapticNeuron()->getPos().x + x_offset,
-                                  synapse->getPreSynapticNeuron()->getPos().y + y_offset),
-                           ImVec2(synapse->getPostSynapticNeuron()->getPos().x + x_offset,
-                                  synapse->getPostSynapticNeuron()->getPos().y + y_offset), col, 1);
+        draw_list->AddLine(ImVec2(synapse->getPreSynapticNeuron()->getPos().x * scale + x_offset,
+                                  synapse->getPreSynapticNeuron()->getPos().y * scale + y_offset),
+                           ImVec2(synapse->getPostSynapticNeuron()->getPos().x * scale + x_offset,
+                                  synapse->getPostSynapticNeuron()->getPos().y * scale + y_offset), col,
+                           3 * std::abs(synapse->getCurrentStrength()));
     }
 
-    for (auto neuron: network.getNeurons()) {
-        draw_list->AddCircleFilled(ImVec2(neuron->getPos().x + x_offset, neuron->getPos().y + y_offset), sz * 0.5f, ImColor(0, 0, (int) remap(neuron->probe(), BASELINE_CHARGE, DEFAULT_FIRE_CHARGE, 100, 255)),
-                                   12);
+    for (const auto& neuron: network->getNeurons()) {
+        ImColor col;
+        if (neuron->isInRefractoryPeriod() && show_refractory_period) {
+            col = ImColor(255, 0, 255);
+        } else {
+            int charge_amount_color = (int) remap(neuron->probe(), BASELINE_CHARGE, DEFAULT_FIRE_CHARGE, 100, 255);
+            col = ImColor(charge_amount_color, charge_amount_color, 255);
+        }
+        draw_list->AddCircleFilled(ImVec2(neuron->getPos().x * scale + x_offset, neuron->getPos().y * scale + y_offset),
+                                   sz * 0.5f, col, 12);
     }
 
     ImGui::PopItemWidth();
 
     ImGui::End();
 
-//    ImGui::ShowDemoWindow();
+    ImGui::ShowDemoWindow();
 //    ImPlot::ShowDemoWindow();
 }

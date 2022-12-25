@@ -10,12 +10,13 @@
 #include "Neuron.h"
 
 const float DEFAULT_BASE_STRENGTH = 0.25;
-const float CURRENT_STRENGTH_DECREASE_RATE = 0.99;
+const float CURRENT_STRENGTH_DECREASE_RATE = 0.999;
 const float FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH = 1.05;
+const float SYNAPSE_STRENGTH_LIMIT = 2;
 
 // Long Term Potentiation (LTP) consts
-const int LTP_TIME = 1500;
-const float LTP_INFLUENCE = 0.1;
+const int LTP_TIME = 7500;
+const float LTP_INFLUENCE = 0.001;
 
 class Synapse {
     float base_strength = DEFAULT_BASE_STRENGTH;

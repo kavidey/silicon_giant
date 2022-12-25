@@ -24,17 +24,19 @@ Synapse::Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::sh
 void Synapse::fire(int timestep, float charge) {
     post_synaptic_neuron->stimulate(charge * current_strength);
     current_strength *= FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH;
+    base_strength = std::clamp(base_strength, -SYNAPSE_STRENGTH_LIMIT, SYNAPSE_STRENGTH_LIMIT);
     last_fired = timestep;
 }
 
 void Synapse::post_synaptic_neuron_fired(int timestep) {
-//    long_term_potentiation(timestep);
+    long_term_potentiation(timestep);
 }
 
 void Synapse::long_term_potentiation(int timestep) {
     int firing_delay = timestep - last_fired;
-    float ltp_change = ((float) (LTP_TIME - firing_delay)) * LTP_INFLUENCE;
+    float ltp_change = std::clamp((float) (LTP_TIME - firing_delay) * LTP_INFLUENCE, -LTP_INFLUENCE, LTP_INFLUENCE);
     base_strength += ltp_change;
+    base_strength = std::clamp(base_strength, -SYNAPSE_STRENGTH_LIMIT, SYNAPSE_STRENGTH_LIMIT);
 }
 
 void Synapse::tick(int timestep) {
