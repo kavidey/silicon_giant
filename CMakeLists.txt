@@ -11,12 +11,13 @@ find_package(glad REQUIRED)
 find_package(glm REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(imgui REQUIRED)
+find_package(implot REQUIRED)
 
 if (DEBUG_LEVEL)
     add_definitions(-DDEBUG_LEVEL=${DEBUG_LEVEL})
 endif()
 
-add_executable(silicon_giant src/main.cpp src/Neuron.cpp src/Neuron.h lib/silicon_giant/util.cpp lib/silicon_giant/util.h src/Synapse.cpp src/Synapse.h src/Network.cpp src/Network.h)
+add_executable(silicon_giant main.cpp src/app.cpp src/app.h src/Neuron.cpp src/Neuron.h lib/silicon_giant/util.cpp lib/silicon_giant/util.h src/Synapse.cpp src/Synapse.h src/Network.cpp src/Network.h lib/silicon_giant/ui.cpp lib/silicon_giant/ui.h lib/silicon_giant/ui.h)
 
 target_link_libraries(
         silicon_giant
@@ -26,5 +27,6 @@ target_link_libraries(
         glad::glad
         glm::glm
         imgui::imgui
+        implot::implot
         "-framework OpenGL"
 )

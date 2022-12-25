@@ -8,7 +8,7 @@
 #include <memory>
 #include "Neuron.h"
 
-const float BASE_STRENGTH = 0.25;
+const float DEFAULT_BASE_STRENGTH = 0.25;
 const float CURRENT_STRENGTH_DECREASE_RATE = 0.99;
 const float FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH = 0.1;
 
@@ -17,8 +17,8 @@ const int LTP_TIME = 1500;
 const float LTP_INFLUENCE = 0.1;
 
 class Synapse {
-    float base_strength = BASE_STRENGTH;
-    float current_strength = BASE_STRENGTH;
+    float base_strength = DEFAULT_BASE_STRENGTH;
+    float current_strength = DEFAULT_BASE_STRENGTH;
     int last_fired = -LTP_TIME;
     std::shared_ptr<Neuron> pre_synaptic_neuron;
     std::shared_ptr<Neuron> post_synaptic_neuron;
@@ -47,6 +47,11 @@ public:
 
     [[nodiscard]] const std::shared_ptr<Neuron> &getPostSynapticNeuron() const;
 
+    ///
+    /// \param random_strength controls whether the synaps resets to \p DEFAULT_BASE_STRENGTH
+    /// or a random strength
+    void reset(bool random_strength);
+
 private:
     /// Updates \p base_strength based on the delay between this synapse firing and the \p post_synaptic_neuron firing
     /// If the two neurons fire with in the time interval defined by \p LTP_TIME the synapse will be strengthened,
@@ -55,6 +60,8 @@ private:
     /// The strength of the change is proportional to time difference to \p LTP_TIME
     /// \param timestep
     void long_term_potentiation(int timestep);
+
+    static float generate_random_strength();
 };
 
 

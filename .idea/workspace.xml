@@ -22,10 +22,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c32ecf9f-336f-44e2-b8a9-943bfe9d9f73" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/silicon_giant/util.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/silicon_giant/util.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Network.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Network.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Neuron.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Neuron.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Synapse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Synapse.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Synapse.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Synapse.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vcpkg.json" beforeDir="false" afterPath="$PROJECT_DIR$/vcpkg.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,14 +77,14 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "CMakeSettings",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
     <configuration name="silicon_giant" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="silicon_giant" TARGET_NAME="silicon_giant" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="silicon_giant" RUN_TARGET_NAME="silicon_giant">
@@ -94,7 +102,8 @@
       <option name="presentableId" value="Default" />
       <updated>1671830963008</updated>
       <workItem from="1671830964106" duration="9234000" />
-      <workItem from="1671920204421" duration="947000" />
+      <workItem from="1671920204421" duration="4774000" />
+      <workItem from="1671930447266" duration="3612000" />
     </task>
     <servers />
   </component>

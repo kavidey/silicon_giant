@@ -42,6 +42,8 @@ public:
     /// \return a pointer to the newly added synapse
     std::shared_ptr<Synapse> add_connection(const std::shared_ptr<Neuron>& pre_synaptic_neuron, const std::shared_ptr<Neuron>& post_synaptic_neuron);
 
+    void reset();
+
     /// Checks whether there is a connection from the \p pre_synaptic_neuron to the \p post_synaptic_neuron
     /// \param pre_synaptic_neuron
     /// \param post_synaptic_neuron

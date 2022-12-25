@@ -77,3 +77,9 @@ void Neuron::remove_incoming_synapse(const std::shared_ptr<Synapse>& synapse) {
 void Neuron::remove_outgoing_synapse(const std::shared_ptr<Synapse>& synapse) {
     outgoing_synapses.remove(synapse);
 }
+
+void Neuron::reset() {
+    last_fired = -REFRACTORY_TIME;
+    in_refractory_period = false;
+    charge = DEFAULT_CHARGE;
+}

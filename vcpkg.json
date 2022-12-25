@@ -8,6 +8,8 @@
     "glad",
     "glm",
     "freetype",
+    "boost-circular-buffer",
+    "implot",
     {
       "name": "imgui",
       "default-features": false,

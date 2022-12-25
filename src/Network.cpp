@@ -110,3 +110,12 @@ std::string Network::get_csv_representation() {
     return result;
 }
 
+void Network::reset() {
+    for (const std::shared_ptr<Neuron> &neuron: neurons) {
+        neuron->reset();
+    }
+    for (const std::shared_ptr<Synapse> &synapse: synapses) {
+        synapse->reset(true);
+    }
+}
+

@@ -51,6 +51,8 @@ public:
 
     void remove_incoming_synapse(const std::shared_ptr<Synapse>& synapse);
     void remove_outgoing_synapse(const std::shared_ptr<Synapse>& synapse);
+
+    void reset();
 };
 
 

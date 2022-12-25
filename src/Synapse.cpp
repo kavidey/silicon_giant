@@ -12,11 +12,8 @@ Synapse::Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::sh
                  bool random_strength) : pre_synaptic_neuron(move(preSynapticNeuron)),
                                          post_synaptic_neuron(move(postSynapticNeuron)) {
     if (random_strength) {
-        float rand_strength = randUniform() - 0.5; // remap it to [-0.5, 0.5]
-        rand_strength *= 2;
-
-        base_strength = rand_strength;
-        current_strength = rand_strength;
+        base_strength = generate_random_strength();
+        current_strength = base_strength;
     }
 }
 
@@ -50,4 +47,23 @@ const std::shared_ptr<Neuron> &Synapse::getPreSynapticNeuron() const {
 
 const std::shared_ptr<Neuron> &Synapse::getPostSynapticNeuron() const {
     return post_synaptic_neuron;
+}
+
+void Synapse::reset(bool random_strength) {
+    if (random_strength) {
+        base_strength = generate_random_strength();
+
+    } else {
+        base_strength = DEFAULT_BASE_STRENGTH;
+    }
+    current_strength = base_strength;
+
+    last_fired = -LTP_TIME;
+}
+
+float Synapse::generate_random_strength() {
+    float rand_strength = randUniform() - 0.5; // remap it to [-0.5, 0.5]
+    rand_strength *= 2;
+
+    return rand_strength;
 }
