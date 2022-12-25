@@ -2,13 +2,26 @@
 // Created by Kavi Dey on 12/22/22.
 //
 
-#include "Synapse.h"
-#include "Neuron.h"
-#include "Network.h"
 #include <string>
 #include <format>
 #include <algorithm>
+#include <boost/graph/fruchterman_reingold.hpp>
+#include <boost/graph/random_layout.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/topology.hpp>
 
+#include "Synapse.h"
+#include "Neuron.h"
+#include "Network.h"
+
+
+Vertex get_vertex(std::shared_ptr<Neuron> neuron, Graph& g, PtrToVertex& neurons)
+{
+    PtrToVertex::iterator i = neurons.find(neuron);
+    if (i == neurons.end())
+        i = neurons.insert(std::make_pair(neuron, boost::add_vertex(neuron, g))).first;
+    return i->second;
+}
 
 Network::Network() = default;
 
@@ -119,5 +132,19 @@ void Network::reset() {
     }
 
     timestep = 0;
+}
+
+Graph Network::to_graph() {
+    Graph g;
+    PtrToVertex neuron_to_vertex;
+
+    for (const auto& synapse: synapses) {
+        boost::add_edge(get_vertex(synapse->getPreSynapticNeuron(), g, neuron_to_vertex), get_vertex(synapse->getPostSynapticNeuron(), g, neuron_to_vertex), g);
+    }
+
+    std::vector<float> position_vec(boost::num_vertices(g));
+    boost::iterator_property_map<std::vector<float>::iterator, boost::property_map<Graph, boost::vertex_index_t>::type > position(position_vec.begin(), boost::get(boost::vertex_index, g));
+
+    return g;
 }
 

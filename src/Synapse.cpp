@@ -8,14 +8,18 @@
 #include "Neuron.h"
 #include "../lib/silicon_giant/util.h"
 
+int Synapse::global_id = 0;
 Synapse::Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::shared_ptr<Neuron> &postSynapticNeuron,
                  bool random_strength) : pre_synaptic_neuron(move(preSynapticNeuron)),
-                                         post_synaptic_neuron(move(postSynapticNeuron)) {
+                                         post_synaptic_neuron(move(postSynapticNeuron)),
+                                         id(global_id++)
+                                         {
     if (random_strength) {
         base_strength = generate_random_strength();
         current_strength = base_strength;
     }
 }
+
 
 void Synapse::fire(int timestep, float charge) {
     post_synaptic_neuron->stimulate(charge * current_strength);
@@ -66,4 +70,8 @@ float Synapse::generate_random_strength() {
     rand_strength *= 2;
 
     return rand_strength;
+}
+
+int Synapse::getId() const {
+    return id;
 }

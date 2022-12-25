@@ -2,6 +2,10 @@
 #include "imgui.h"
 #include "implot.h"
 #include <boost/circular_buffer.hpp>
+#include <boost/graph/fruchterman_reingold.hpp>
+#include <boost/graph/random_layout.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/topology.hpp>
 #include "vector"
 
 #include "Network.h"
@@ -16,7 +20,7 @@ std::shared_ptr<Neuron> b;
 
 std::vector<std::pair<std::shared_ptr<Neuron>, std::shared_ptr<boost::circular_buffer<float>>>> neuron_monitor;
 
-void setup() {
+void setup_network() {
     network = Network();
 
     a = std::make_shared<Neuron>();
@@ -58,32 +62,23 @@ void setup() {
             }
         }
     }
-
-//    std::shared_ptr<Synapse> synapse = network.add_connection(a, b);
-
-//    while (b->probe() == -70) {
-//        a->stimulate(50);
-//        network.tick();
-//    }
-//
-//    for (int i = 0; i < 100; i++) {
-//        a->stimulate(50);
-//        std::cout << b->probe() << std::endl;
-//        network.tick();
-//    }
-
-//    for (std::shared_ptr<Synapse> synapse: a->getOutgoingSynapses()) {
-//        std::cout << synapse->getPostSynapticNeuron() << " " << synapse->getCurrentStrength() << " " << synapse->getPostSynapticNeuron()->probe() << std::endl;
-//    }
-
-//    std::cout << network.get_dotvis_representation() << std::endl;
-//    std::cout << network.get_csv_representation() << std::endl;
 }
 
 void render_ui() {
     ImGui::DockSpaceOverViewport();
 
-    ImGui::Begin("Control");
+    ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoTitleBar;
+//    window_flags |= ImGuiWindowFlags_NoScrollbar;
+//    window_flags |= ImGuiWindowFlags_MenuBar;
+    window_flags |= ImGuiWindowFlags_NoMove;
+//    window_flags |= ImGuiWindowFlags_NoResize;
+    window_flags |= ImGuiWindowFlags_NoCollapse;
+    window_flags |= ImGuiWindowFlags_NoNav;
+
+    ImGui::Begin("Control", nullptr, window_flags);
+
+    ImGui::Text("Framerate: %f", ImGui::GetIO().Framerate);
 
     // This doesn't work. For some reason it rounds to an int
 //    ImGui::Text("Sim Time: %3.f s", ((float) network.getTimestep()) / 1000.0f);
@@ -120,7 +115,7 @@ void render_ui() {
         monitor.second->linearize();
     }
 
-    ImGui::Begin("Monitoring");
+    ImGui::Begin("Monitoring", nullptr, window_flags);
     static ImGuiTableFlags flags = ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV |
                                    ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable;
     ImGui::BeginTable("##table", 3, flags, ImVec2(-1, 0));
@@ -147,12 +142,89 @@ void render_ui() {
     ImGui::EndTable();
     ImGui::End();
 
-    ImGui::Begin("Selected");
+    ImGui::Begin("Selected", nullptr, window_flags);
     ImGui::End();
 
-    ImGui::Begin("Network");
+    ImGui::Begin("Network", nullptr, window_flags);
+
+    // Generate Graph and Positions
+    static Graph g = network.to_graph();
+    PositionVec position_vec(boost::num_vertices(g));
+    PositionMap positions(position_vec.begin(), get(boost::vertex_index, g));
+
+    // Assign random position to all nodes
+    static boost::minstd_rand gen;
+    const double width = 500;
+    const double height = 500;
+    static boost::rectangle_topology topo(gen, -width / 2, -height / 2, width / 2, height / 2);
+    boost::random_graph_layout(g, positions, topo);
+
+    static Graph prev_graph;
+    static PositionMap prev_neuron_positions;
+
+    // Make sure prev_graph isn't empty
+    if (boost::vertices(prev_graph).first != boost::vertices(prev_graph).second) {
+        boost::graph_traits<Graph>::vertex_iterator vi, vi_end;
+        for (boost::tie(vi, vi_end) = boost::vertices(prev_graph); vi != vi_end; ++vi)
+        {
+            std::shared_ptr<Neuron> prev_neuron = boost::get(boost::vertex_name, prev_graph, *vi);
+
+            boost::graph_traits<Graph>::vertex_iterator vj, vj_end;
+            for (boost::tie(vj, vj_end) = boost::vertices(g); vj != vj_end; ++vj)
+            {
+                if (prev_neuron->getId() == boost::get(boost::vertex_name, g, *vj)->getId()) {
+                    positions[*vj][0] = prev_neuron_positions[*vi][0];
+                    positions[*vj][1] = prev_neuron_positions[*vi][1];
+                    std::cout << prev_neuron->getId() << " " << boost::get(boost::vertex_name, g, *vj)->getId() << std::endl;
+                }
+            }
+        }
+    }
+
+    // Pretty layout
+    static double temp = 5;
+    const double step = 0.1;
+    bool done = false;
+    const auto custom_cooling = [&, frame_number = 0]() mutable {
+        if (!done) {
+            done = true;
+            return temp;
+        } else {
+            return (double) 0;
+        }
+    };
+    boost::fruchterman_reingold_force_directed_layout(g, positions, topo, boost::cooling(custom_cooling));
+//    boost::fruchterman_reingold_force_directed_layout(g, positions, topo, boost::cooling(boost::linear_cooling<double>(1)));
+    temp = std::max(temp - step, (double) 0);
+    std::cout << temp << std::endl;
+
+    prev_graph = g;
+    prev_neuron_positions = positions;
+
+    // Setup ImGui
+    ImGui::PushItemWidth(-ImGui::GetFontSize() * 15);
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+    const ImU32 col = ImColor(255, 255, 0);
+
+    ImVec2 canvas_sz = ImGui::GetContentRegionAvail();   // Resize canvas to what's available
+    const ImVec2 p = ImGui::GetCursorScreenPos();
+
+    static float sz = 5.0f;
+    float x_offset = p.x + canvas_sz.x / 2 + sz*0.5f;
+    float y_offset = p.y + canvas_sz.y / 2 + sz*0.5f;
+
+    boost::graph_traits<Graph>::vertex_iterator vj, vj_end;
+    for (boost::tie(vj, vj_end) = boost::vertices(g); vj != vj_end; ++vj)
+    {
+//        boost::get(boost::vertex_name, g, *vj);
+        draw_list->AddCircleFilled(ImVec2(positions[*vj][0] + x_offset, positions[*vj][1] + y_offset), sz * 0.5f, col, 12);
+    }
+
+    ImGui::PopItemWidth();
+
     ImGui::End();
 
-    ImGui::ShowDemoWindow();
+//    ImGui::ShowDemoWindow();
 //    ImPlot::ShowDemoWindow();
 }

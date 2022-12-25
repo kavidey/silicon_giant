@@ -5,7 +5,7 @@
 #ifndef SILICON_GIANT_APP_H
 #define SILICON_GIANT_APP_H
 
-void setup();
+void setup_network();
 
 void render_ui();
 

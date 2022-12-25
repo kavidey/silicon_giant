@@ -24,12 +24,17 @@ class Neuron {
     std::list<std::shared_ptr<Synapse>> outgoing_synapses;
     std::list<std::shared_ptr<Synapse>> incoming_synapses;
 
+    static int global_id;
+    int id;
+
 public:
     Neuron();
 
     /// Simulates the neuron for one timestep
     /// \param timestep current simulation timestep
     void tick(int timestep);
+
+    int getId() const;
 
     /// Fires the neuron, sending a charge to all of its outgoing synapses
     /// \param timestep current simulation timestep

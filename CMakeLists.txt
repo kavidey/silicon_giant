@@ -3,6 +3,7 @@ project(silicon_giant)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(Boost_NO_WARN_NEW_VERSIONS 1)
 MESSAGE(STATUS "Using toolchain file: ${CMAKE_TOOLCHAIN_FILE}")
 
 ## Find dependencies
@@ -12,6 +13,7 @@ find_package(glm REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(imgui REQUIRED)
 find_package(implot REQUIRED)
+find_package(Boost REQUIRED COMPONENTS graph)
 
 if (DEBUG_LEVEL)
     add_definitions(-DDEBUG_LEVEL=${DEBUG_LEVEL})
@@ -22,6 +24,8 @@ add_executable(silicon_giant main.cpp src/app.cpp src/app.h src/Neuron.cpp src/N
 target_link_libraries(
         silicon_giant
         PRIVATE
+        Boost::boost
+        Boost::graph
         Freetype::Freetype
         glfw
         glad::glad

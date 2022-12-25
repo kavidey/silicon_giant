@@ -8,7 +8,18 @@
 #include <list>
 #include <memory>
 #include <string>
+
+#include <boost/graph/adjacency_list.hpp>
+
 #include "Neuron.h"
+
+typedef boost::adjacency_list<boost::listS, boost::vecS, boost::undirectedS, boost::property<boost::vertex_name_t, std::shared_ptr<Neuron>>> Graph;
+typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;
+typedef std::map<std::shared_ptr<Neuron>, Vertex> PtrToVertex;
+typedef std::vector<boost::rectangle_topology<>::point_type> PositionVec;
+typedef boost::iterator_property_map< PositionVec::iterator, boost::property_map<Graph, boost::vertex_index_t>::type> PositionMap;
+
+Vertex get_vertex(std::shared_ptr<Neuron> neuron, Graph& g, PtrToVertex& neurons);
 
 class Network {
     std::list<std::shared_ptr<Neuron>> neurons = {};
@@ -49,6 +60,8 @@ public:
     /// \param post_synaptic_neuron
     /// \return
     static bool are_connected(const std::shared_ptr<Neuron>& pre_synaptic_neuron, const std::shared_ptr<Neuron>& post_synaptic_neuron);
+
+    Graph to_graph();
 
     std::string get_dotvis_representation();
     std::string get_csv_representation();

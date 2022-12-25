@@ -6,6 +6,7 @@
 #define SILICON_GIANT_SYNAPSE_H
 
 #include <memory>
+
 #include "Neuron.h"
 
 const float DEFAULT_BASE_STRENGTH = 0.25;
@@ -23,6 +24,9 @@ class Synapse {
     std::shared_ptr<Neuron> pre_synaptic_neuron;
     std::shared_ptr<Neuron> post_synaptic_neuron;
 
+    static int global_id;
+    int id;
+
 public:
     Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::shared_ptr<Neuron> &postSynapticNeuron,
             bool random_strength);
@@ -30,6 +34,8 @@ public:
     /// Simulates the neuron for one timestep
     /// \param timestep current simulation timestep
     void tick(int timestep);
+
+    int getId() const;
 
     /// Fires the synapse, passing the incoming charge to its \p post_synaptic_neuron
     /// \param timestep

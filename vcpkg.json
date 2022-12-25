@@ -9,6 +9,7 @@
     "glm",
     "freetype",
     "boost-circular-buffer",
+    "boost-graph",
     "implot",
     {
       "name": "imgui",

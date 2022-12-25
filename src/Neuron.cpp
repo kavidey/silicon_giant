@@ -6,7 +6,8 @@
 #include "Synapse.h"
 #include "../lib/silicon_giant/util.h"
 
-Neuron::Neuron() {}
+int Neuron::global_id = 0;
+Neuron::Neuron(): id(global_id++) {}
 
 void Neuron::tick(int timestep) {
     if (in_refractory_period) {
@@ -82,4 +83,8 @@ void Neuron::reset() {
     last_fired = -REFRACTORY_TIME;
     in_refractory_period = false;
     charge = BASELINE_CHARGE;
+}
+
+int Neuron::getId() const {
+    return id;
 }
