@@ -32,8 +32,6 @@ void setup_network() {
 
     for (int i = 0; i < 10; i++) {
         network->add_neuron(std::make_shared<Neuron>());
-        neuron_monitor.emplace_back(network->getNeuronByIndex(i),
-                                    std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
     }
     network->add_neuron(a);
     for (int i = 0; i < 100; i++) {
@@ -102,7 +100,7 @@ void render_ui() {
     }
 
     static int sim_speed = 1;
-    ImGui::SliderInt("Speed", &sim_speed, 1, 1000, "%dx", ImGuiSliderFlags_Logarithmic);
+    ImGui::SliderInt("Speed", &sim_speed, 1, 10000, "%dx", ImGuiSliderFlags_Logarithmic);
 
     ImGui::Spacing();
 
@@ -110,8 +108,7 @@ void render_ui() {
     static bool show_refractory_period = true;
     static float scale = 2.0f;
 
-    if (ImGui::CollapsingHeader("Visualization Settings"))
-    {
+    if (ImGui::CollapsingHeader("Visualization Settings")) {
         if (ImGui::Button("Reset Network Visualization")) {
             reset_network_viz = true;
         }
@@ -150,7 +147,7 @@ void render_ui() {
     for (int i = 0; i < neuron_monitor.size(); i++) {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
-        ImGui::Text("%p", neuron_monitor[i].first.get());
+        ImGui::Text("Neuron %d", neuron_monitor[i].first->getId());
         ImGui::TableSetColumnIndex(1);
         ImGui::Text("%.2f mV", neuron_monitor[i].first->probe());
         ImGui::TableSetColumnIndex(2);
@@ -163,9 +160,6 @@ void render_ui() {
 
     ImPlot::PopColormap();
     ImGui::EndTable();
-    ImGui::End();
-
-    ImGui::Begin("Selected", nullptr, window_flags);
     ImGui::End();
 
     ImGui::Begin("Network", nullptr, window_flags);
@@ -218,7 +212,7 @@ void render_ui() {
     if (reset_network_viz) {
         temp = max_temp;
 
-        for (const auto& neuron: network->getNeurons()) {
+        for (const auto &neuron: network->getNeurons()) {
             neuron->setPos({0, 0});
         }
     }
@@ -239,7 +233,7 @@ void render_ui() {
         boost::get(boost::vertex_name, g, *vj)->setPos({positions[*vj][0], positions[*vj][1]});
     }
 
-    for (const auto& synapse: network->getSynapses()) {
+    for (const auto &synapse: network->getSynapses()) {
         float strength = std::abs(synapse->getCurrentStrength());
         ImColor col;
         if (synapse->getCurrentStrength() > 0) {
@@ -254,7 +248,7 @@ void render_ui() {
                            3 * std::abs(synapse->getCurrentStrength()));
     }
 
-    for (const auto& neuron: network->getNeurons()) {
+    for (const auto &neuron: network->getNeurons()) {
         ImColor col;
         if (neuron->isInRefractoryPeriod() && show_refractory_period) {
             col = ImColor(255, 0, 255);
@@ -266,8 +260,50 @@ void render_ui() {
                                    sz * 0.5f, col, 12);
     }
 
+    ImGuiIO &io = ImGui::GetIO();
+    ImGui::InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
+//    const bool is_hovered = ImGui::IsItemHovered(); // Hovered
+    const bool is_active = ImGui::IsItemActive();   // Held
+
+    static std::shared_ptr<Neuron> selected_neuron = nullptr;
+    if (is_active) {
+        for (const auto &neuron: network->getNeurons()) {
+            if (dist(io.MousePos.x, io.MousePos.y, neuron->getPos().x * scale + x_offset,
+                     neuron->getPos().y * scale + y_offset) <= sz) {
+//                std::cout << "selected: " << neuron->getId() << std::endl;
+                selected_neuron = neuron;
+            }
+        }
+    }
+
     ImGui::PopItemWidth();
 
+    ImGui::End();
+
+    ImGui::Begin("Selected", nullptr, window_flags);
+    if (selected_neuron != nullptr) {
+        ImGui::Text("Neuron %d", selected_neuron->getId());
+        ImGui::Text("%p", selected_neuron.get());
+        ImGui::Separator();
+
+        ImGui::Spacing();
+        ImGui::Text("Refractory Period: %s", selected_neuron->isInRefractoryPeriod() ? "true" : "false");
+        ImGui::Text("Charge: %.2f", selected_neuron->probe());
+
+        ImGui::Spacing();
+        bool monitored = false;
+        for (auto monitor: neuron_monitor) {
+            if (monitor.first == selected_neuron) {
+                monitored = true;
+            }
+        }
+        if (monitored) ImGui::BeginDisabled(true);
+        if (ImGui::Button("Monitor")) {
+            neuron_monitor.emplace_back(selected_neuron,
+                                        std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
+        }
+        if (monitored) ImGui::EndDisabled();
+    }
     ImGui::End();
 
     ImGui::ShowDemoWindow();

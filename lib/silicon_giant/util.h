@@ -14,7 +14,16 @@
 /// \return
 float lerp(float a, float b, float t);
 
+/// Remaps the range of a value
+/// \param value value to remap
+/// \param istart input range lower bound
+/// \param istop input range higher bound
+/// \param ostart output range lower bound
+/// \param ostop output range higher bound
+/// \return
 float remap(float value, float istart, float istop, float ostart, float ostop);
+
+float dist(float x1, float y1, float x2, float y2);
 
 ///
 /// \return random float between 0 and 1 (uniform distribution)
