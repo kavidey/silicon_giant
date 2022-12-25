@@ -81,6 +81,8 @@ void setup() {
 }
 
 void render_ui() {
+    ImGui::DockSpaceOverViewport();
+
     ImGui::Begin("Control");
 
     // This doesn't work. For some reason it rounds to an int
@@ -100,9 +102,8 @@ void render_ui() {
     }
 
     static int sim_speed = 1;
-    ImGui::DragInt("Simulation Speed", &sim_speed, 0, 1, 10, "%dx");
-
-
+    ImGui::DragInt("Speed", &sim_speed, 0, 1, 10, "%dx");
+    ImGui::End();
 
     if (simulating) {
         for (int i = 0; i < sim_speed; i++) {
@@ -119,6 +120,7 @@ void render_ui() {
         monitor.second->linearize();
     }
 
+    ImGui::Begin("Monitoring");
     static ImGuiTableFlags flags = ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV |
                                    ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable;
     ImGui::BeginTable("##table", 3, flags, ImVec2(-1, 0));
@@ -143,9 +145,14 @@ void render_ui() {
 
     ImPlot::PopColormap();
     ImGui::EndTable();
-
     ImGui::End();
 
-//    ImGui::ShowDemoWindow();
+    ImGui::Begin("Selected");
+    ImGui::End();
+
+    ImGui::Begin("Network");
+    ImGui::End();
+
+    ImGui::ShowDemoWindow();
 //    ImPlot::ShowDemoWindow();
 }

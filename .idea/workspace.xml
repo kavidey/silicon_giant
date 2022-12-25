@@ -23,13 +23,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c32ecf9f-336f-44e2-b8a9-943bfe9d9f73" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/silicon_giant/ui.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/silicon_giant/ui.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Network.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Network.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Neuron.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Neuron.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Synapse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Synapse.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Synapse.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Synapse.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -101,7 +95,7 @@
       <workItem from="1671830964106" duration="9234000" />
       <workItem from="1671920204421" duration="4774000" />
       <workItem from="1671930447266" duration="5265000" />
-      <workItem from="1671936423395" duration="2356000" />
+      <workItem from="1671936423395" duration="3478000" />
     </task>
     <servers />
   </component>
