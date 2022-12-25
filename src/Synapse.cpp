@@ -28,7 +28,7 @@ void Synapse::fire(int timestep, float charge) {
 }
 
 void Synapse::post_synaptic_neuron_fired(int timestep) {
-    long_term_potentiation(timestep);
+//    long_term_potentiation(timestep);
 }
 
 void Synapse::long_term_potentiation(int timestep) {
@@ -66,7 +66,7 @@ void Synapse::reset(bool random_strength) {
 }
 
 float Synapse::generate_random_strength() {
-    float rand_strength = randUniform() - 0.2;
+    float rand_strength = randUniform() - 0.4;
     rand_strength *= 2;
 
     return rand_strength;

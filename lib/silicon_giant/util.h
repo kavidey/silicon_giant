@@ -14,6 +14,8 @@
 /// \return
 float lerp(float a, float b, float t);
 
+float remap(float value, float istart, float istop, float ostart, float ostop);
+
 ///
 /// \return random float between 0 and 1 (uniform distribution)
 float randUniform();

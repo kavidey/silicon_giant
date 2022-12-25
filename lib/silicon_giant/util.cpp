@@ -11,6 +11,10 @@ float lerp(float a, float b, float t) {
     return a * (1.0 - t) + (b * t);
 }
 
+float remap(float value, float istart, float istop, float ostart, float ostop) {
+return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+}
+
 std::random_device rd;
 std::default_random_engine eng(rd());
 

@@ -228,14 +228,20 @@ void render_ui() {
     }
 
     for (auto synapse: network.getSynapses()) {
+        ImColor col;
+        if (synapse->getCurrentStrength() > 0) {
+            col = ImColor(0,(int) (synapse->getCurrentStrength()*255),0);
+        } else {
+            col = ImColor((int) (synapse->getCurrentStrength()*-255),0,0);
+        }
         draw_list->AddLine(ImVec2(synapse->getPreSynapticNeuron()->getPos().x + x_offset,
                                   synapse->getPreSynapticNeuron()->getPos().y + y_offset),
                            ImVec2(synapse->getPostSynapticNeuron()->getPos().x + x_offset,
-                                  synapse->getPostSynapticNeuron()->getPos().y + y_offset), ImColor(0, 0, 255, 50), 1);
+                                  synapse->getPostSynapticNeuron()->getPos().y + y_offset), col, 1);
     }
 
     for (auto neuron: network.getNeurons()) {
-        draw_list->AddCircleFilled(ImVec2(neuron->getPos().x + x_offset, neuron->getPos().y + y_offset), sz * 0.5f, ImColor(255, 255, 0),
+        draw_list->AddCircleFilled(ImVec2(neuron->getPos().x + x_offset, neuron->getPos().y + y_offset), sz * 0.5f, ImColor(0, 0, (int) remap(neuron->probe(), BASELINE_CHARGE, DEFAULT_FIRE_CHARGE, 100, 255)),
                                    12);
     }
 
