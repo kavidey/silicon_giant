@@ -23,8 +23,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c32ecf9f-336f-44e2-b8a9-943bfe9d9f73" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Neuron.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Neuron.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Network.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Network.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -92,7 +92,7 @@
       <workItem from="1671920204421" duration="4774000" />
       <workItem from="1671930447266" duration="5265000" />
       <workItem from="1671936423395" duration="16138000" />
-      <workItem from="1671964468117" duration="2992000" />
+      <workItem from="1671964468117" duration="5566000" />
     </task>
     <servers />
   </component>

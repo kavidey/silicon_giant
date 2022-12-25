@@ -148,3 +148,11 @@ Graph Network::to_graph() {
     return g;
 }
 
+const std::list<std::shared_ptr<Neuron>> &Network::getNeurons() const {
+    return neurons;
+}
+
+const std::list<std::shared_ptr<Synapse>> &Network::getSynapses() const {
+    return synapses;
+}
+

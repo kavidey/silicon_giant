@@ -32,7 +32,8 @@ void setup_network() {
 
     for (int i = 0; i < 10; i++) {
         network.add_neuron(std::make_shared<Neuron>());
-        neuron_monitor.emplace_back(network.getNeuronByIndex(i), std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
+        neuron_monitor.emplace_back(network.getNeuronByIndex(i),
+                                    std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
     }
     network.add_neuron(a);
     for (int i = 0; i < 100; i++) {
@@ -50,13 +51,14 @@ void setup_network() {
         while (!valid_synapse) {
             int pre_index = (int) (randUniform() * num_neurons);
             int post_index = -1;
-            while (post_index <= 0 || post_index >= num_neurons-1) {
+            while (post_index <= 0 || post_index >= num_neurons - 1) {
                 post_index = (randNormal() * 20) + pre_index;
             }
 
             std::shared_ptr<Neuron> pre_neuron = network.getNeuronByIndex(pre_index);
             std::shared_ptr<Neuron> post_neuron = network.getNeuronByIndex(post_index);
-            if (post_index != pre_index && !Network::are_connected(pre_neuron, post_neuron) && !Network::are_connected(post_neuron, pre_neuron)) {
+            if (post_index != pre_index && !Network::are_connected(pre_neuron, post_neuron) &&
+                !Network::are_connected(post_neuron, pre_neuron)) {
                 network.add_connection(pre_neuron, post_neuron);
                 valid_synapse = true;
             }
@@ -91,9 +93,15 @@ void render_ui() {
         simulating = !ImGui::Button("Stop");
     }
     ImGui::SameLine();
+
     if (ImGui::Button("Reset")) {
         simulating = false;
         network.reset();
+    }
+
+    bool reset_network_viz = false;
+    if (ImGui::Button("Reset Network Visualization")) {
+        reset_network_viz = true;
     }
 
     static int sim_speed = 1;
@@ -134,7 +142,8 @@ void render_ui() {
         ImGui::TableSetColumnIndex(2);
         ImGui::PushID(i);
         auto buffer_to_array = neuron_monitor[i].second->array_one();
-        Sparkline("##spark", buffer_to_array.first, buffer_to_array.second, MINIMUM_POSSIBLE_CHARGE, 100.0f, 0, ImPlot::GetColormapColor(i),ImVec2(-1, 35));
+        Sparkline("##spark", buffer_to_array.first, buffer_to_array.second, MINIMUM_POSSIBLE_CHARGE, 100.0f, 0,
+                  ImPlot::GetColormapColor(i), ImVec2(-1, 35));
         ImGui::PopID();
     }
 
@@ -159,17 +168,14 @@ void render_ui() {
     static boost::rectangle_topology topo(gen, -width / 2, -height / 2, width / 2, height / 2);
 //    boost::random_graph_layout(g, positions, topo);
 
-    for(int i = 0; i < network.getNumNeurons(); i++) {
-        const auto& neuron = network.getNeuronByIndex(i);
-
+    for (auto neuron: network.getNeurons()) {
         if (neuron->getPos().x == 0 and neuron->getPos().y == 0) {
-            neuron->setPos({(randUniform()-0.5)*width, (randUniform()-0.5)*height});
+            neuron->setPos({(randUniform() - 0.5) * width, (randUniform() - 0.5) * height});
         }
     }
 
     boost::graph_traits<Graph>::vertex_iterator vi, vi_end;
-    for (boost::tie(vi, vi_end) = boost::vertices(g); vi != vi_end; ++vi)
-    {
+    for (boost::tie(vi, vi_end) = boost::vertices(g); vi != vi_end; ++vi) {
         auto neuron = boost::get(boost::vertex_name, g, *vi);
         positions[*vi][0] = neuron->getPos().x;
         positions[*vi][1] = neuron->getPos().y;
@@ -178,10 +184,10 @@ void render_ui() {
     // Pretty layout
     const double max_temp = 100;
     const double step = 0.1;
-    const double dec = 0.999;
+    const double dec = 0.975;
 
     static double temp = max_temp;
-    int iters = 10;
+    int iters = 1;
     const auto custom_cooling = [&, frame_number = 0]() mutable {
         if (iters > 0) {
             iters--;
@@ -191,35 +197,46 @@ void render_ui() {
             return (double) 0;
         }
     };
-    boost::fruchterman_reingold_force_directed_layout(g, positions, topo, boost::cooling(custom_cooling));
-//    boost::fruchterman_reingold_force_directed_layout(g, positions, topo, boost::cooling(boost::linear_cooling<double>(1)));
-    temp *= dec;
-//    temp -= step;
-//    temp = std::max(temp - step, (double) 0);
-//    if (temp == 0) {
-//        temp = max_temp;
-//    }
 
-    std::cout << temp << std::endl;
+    boost::fruchterman_reingold_force_directed_layout(g, positions, topo, boost::cooling(custom_cooling));
+
+    temp = std::max(temp - step, (double) 0);
+    if (reset_network_viz) {
+        temp = max_temp;
+
+        for (auto neuron: network.getNeurons()) {
+            neuron->setPos({0,0});
+        }
+    }
 
     // Setup ImGui
     ImGui::PushItemWidth(-ImGui::GetFontSize() * 15);
-    ImDrawList* draw_list = ImGui::GetWindowDrawList();
-
-    const ImU32 col = ImColor(255, 255, 0);
+    ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
     ImVec2 canvas_sz = ImGui::GetContentRegionAvail();   // Resize canvas to what's available
     const ImVec2 p = ImGui::GetCursorScreenPos();
 
     static float sz = 5.0f;
-    float x_offset = p.x + canvas_sz.x / 2 + sz*0.5f;
-    float y_offset = p.y + canvas_sz.y / 2 + sz*0.5f;
+    float x_offset = p.x + canvas_sz.x / 2 + sz * 0.5f;
+    float y_offset = p.y + canvas_sz.y / 2 + sz * 0.5f;
+
 
     boost::graph_traits<Graph>::vertex_iterator vj, vj_end;
     for (boost::tie(vj, vj_end) = boost::vertices(g); vj != vj_end; ++vj)
     {
-//        boost::get(boost::vertex_name, g, *vj);
-        draw_list->AddCircleFilled(ImVec2(positions[*vj][0] + x_offset, positions[*vj][1] + y_offset), sz * 0.5f, col, 12);
+        boost::get(boost::vertex_name, g, *vj)->setPos({positions[*vj][0], positions[*vj][1]});
+    }
+
+    for (auto synapse: network.getSynapses()) {
+        draw_list->AddLine(ImVec2(synapse->getPreSynapticNeuron()->getPos().x + x_offset,
+                                  synapse->getPreSynapticNeuron()->getPos().y + y_offset),
+                           ImVec2(synapse->getPostSynapticNeuron()->getPos().x + x_offset,
+                                  synapse->getPostSynapticNeuron()->getPos().y + y_offset), ImColor(0, 0, 255, 50), 1);
+    }
+
+    for (auto neuron: network.getNeurons()) {
+        draw_list->AddCircleFilled(ImVec2(neuron->getPos().x + x_offset, neuron->getPos().y + y_offset), sz * 0.5f, ImColor(255, 255, 0),
+                                   12);
     }
 
     ImGui::PopItemWidth();

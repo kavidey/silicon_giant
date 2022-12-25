@@ -36,6 +36,10 @@ public:
     [[nodiscard]] int getNumNeurons() const;
     [[nodiscard]] const std::shared_ptr<Neuron> &getNeuronByIndex(int i) const;
 
+    const std::list<std::shared_ptr<Neuron>> &getNeurons() const;
+
+    const std::list<std::shared_ptr<Synapse>> &getSynapses() const;
+
     /// Advances the simulation by one timestep
     void tick();
 
