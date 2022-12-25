@@ -157,37 +157,35 @@ void render_ui() {
     const double width = 500;
     const double height = 500;
     static boost::rectangle_topology topo(gen, -width / 2, -height / 2, width / 2, height / 2);
-    boost::random_graph_layout(g, positions, topo);
+//    boost::random_graph_layout(g, positions, topo);
 
-    static Graph prev_graph;
-    static PositionMap prev_neuron_positions;
+    for(int i = 0; i < network.getNumNeurons(); i++) {
+        const auto& neuron = network.getNeuronByIndex(i);
 
-    // Make sure prev_graph isn't empty
-    if (boost::vertices(prev_graph).first != boost::vertices(prev_graph).second) {
-        boost::graph_traits<Graph>::vertex_iterator vi, vi_end;
-        for (boost::tie(vi, vi_end) = boost::vertices(prev_graph); vi != vi_end; ++vi)
-        {
-            std::shared_ptr<Neuron> prev_neuron = boost::get(boost::vertex_name, prev_graph, *vi);
-
-            boost::graph_traits<Graph>::vertex_iterator vj, vj_end;
-            for (boost::tie(vj, vj_end) = boost::vertices(g); vj != vj_end; ++vj)
-            {
-                if (prev_neuron->getId() == boost::get(boost::vertex_name, g, *vj)->getId()) {
-                    positions[*vj][0] = prev_neuron_positions[*vi][0];
-                    positions[*vj][1] = prev_neuron_positions[*vi][1];
-                    std::cout << prev_neuron->getId() << " " << boost::get(boost::vertex_name, g, *vj)->getId() << std::endl;
-                }
-            }
+        if (neuron->getPos().x == 0 and neuron->getPos().y == 0) {
+            neuron->setPos({(randUniform()-0.5)*width, (randUniform()-0.5)*height});
         }
     }
 
+    boost::graph_traits<Graph>::vertex_iterator vi, vi_end;
+    for (boost::tie(vi, vi_end) = boost::vertices(g); vi != vi_end; ++vi)
+    {
+        auto neuron = boost::get(boost::vertex_name, g, *vi);
+        positions[*vi][0] = neuron->getPos().x;
+        positions[*vi][1] = neuron->getPos().y;
+    }
+
     // Pretty layout
-    static double temp = 5;
+    const double max_temp = 100;
     const double step = 0.1;
-    bool done = false;
+    const double dec = 0.999;
+
+    static double temp = max_temp;
+    int iters = 10;
     const auto custom_cooling = [&, frame_number = 0]() mutable {
-        if (!done) {
-            done = true;
+        if (iters > 0) {
+            iters--;
+            temp *= dec;
             return temp;
         } else {
             return (double) 0;
@@ -195,11 +193,14 @@ void render_ui() {
     };
     boost::fruchterman_reingold_force_directed_layout(g, positions, topo, boost::cooling(custom_cooling));
 //    boost::fruchterman_reingold_force_directed_layout(g, positions, topo, boost::cooling(boost::linear_cooling<double>(1)));
-    temp = std::max(temp - step, (double) 0);
-    std::cout << temp << std::endl;
+    temp *= dec;
+//    temp -= step;
+//    temp = std::max(temp - step, (double) 0);
+//    if (temp == 0) {
+//        temp = max_temp;
+//    }
 
-    prev_graph = g;
-    prev_neuron_positions = positions;
+    std::cout << temp << std::endl;
 
     // Setup ImGui
     ImGui::PushItemWidth(-ImGui::GetFontSize() * 15);

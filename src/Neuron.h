@@ -17,6 +17,11 @@ const int REFRACTORY_TIME = 100; // 1 ms
 
 class Synapse;
 
+struct vec2d {
+    double x;
+    double y;
+};
+
 class Neuron {
     int last_fired = -REFRACTORY_TIME;
     bool in_refractory_period = false;
@@ -26,6 +31,8 @@ class Neuron {
 
     static int global_id;
     int id;
+
+    vec2d pos;
 
 public:
     Neuron();
@@ -45,6 +52,10 @@ public:
     /// Receives charge from an incoming synapse
     /// \param incoming_charge the amount of electrical charge (in mV)
     void stimulate(float incoming_charge);
+
+    const vec2d &getPos() const;
+
+    void setPos(const vec2d &pos);
 
     void add_outgoing_synapse(const std::shared_ptr<Synapse>& synapse);
     void add_incoming_synapse(const std::shared_ptr<Synapse>& synapse);

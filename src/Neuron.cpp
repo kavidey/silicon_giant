@@ -7,7 +7,7 @@
 #include "../lib/silicon_giant/util.h"
 
 int Neuron::global_id = 0;
-Neuron::Neuron(): id(global_id++) {}
+Neuron::Neuron(): id(global_id++), pos({0,0}) {}
 
 void Neuron::tick(int timestep) {
     if (in_refractory_period) {
@@ -87,4 +87,12 @@ void Neuron::reset() {
 
 int Neuron::getId() const {
     return id;
+}
+
+const vec2d &Neuron::getPos() const {
+    return pos;
+}
+
+void Neuron::setPos(const vec2d &pos) {
+    Neuron::pos = pos;
 }
