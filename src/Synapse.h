@@ -10,13 +10,13 @@
 #include "Neuron.h"
 
 const float DEFAULT_BASE_STRENGTH = 0.25;
-const float CURRENT_STRENGTH_DECREASE_RATE = 0.999;
-const float FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH = 1.05;
+const float CURRENT_STRENGTH_DECREASE_RATE = 0.9991;
+const float FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH = 0.01;
 const float SYNAPSE_STRENGTH_LIMIT = 2;
 
 // Long Term Potentiation (LTP) consts
 const int LTP_TIME = 7500;
-const float LTP_INFLUENCE = 0.001;
+const float LTP_INFLUENCE = 0.0001;
 
 class Synapse {
     float base_strength = DEFAULT_BASE_STRENGTH;
@@ -57,7 +57,20 @@ public:
     ///
     /// \param random_strength controls whether the synaps resets to \p DEFAULT_BASE_STRENGTH
     /// or a random strength
-    void reset(bool random_strength);
+    /// \note It is better to reset the strength using the set_strength function on the associated neuron
+    /// that function takes into account the number of synapses in order to keep the network in a
+    /// critical state
+    void set_strength(bool random_strength);
+
+    ///
+    /// \param strength the strength to set the synapse to
+    /// \note It is better to reset the strength using the set_strength function on the associated neuron
+    /// that function takes into account the number of synapses in order to keep the network in a
+    /// critical state
+    void set_strength(float strength);
+
+    /// Resets the neuron to its default state
+    void reset();
 
 private:
     /// Updates \p base_strength based on the delay between this synapse firing and the \p post_synaptic_neuron firing

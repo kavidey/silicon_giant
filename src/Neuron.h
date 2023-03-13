@@ -9,11 +9,12 @@
 #include <memory>
 
 const float BASELINE_CHARGE = -70; // mV
-const float DEFAULT_FIRE_CHARGE = 50; // mV
-const float ACTION_POTENTIAL_THRESHOLD = 55; // mV
+const float DEFAULT_FIRE_CHARGE = 10; // mV
+const float ACTION_POTENTIAL_THRESHOLD = -55; // mV
 const float MINIMUM_POSSIBLE_CHARGE = -100; // mV
 const float CHARGE_DECREASE_RATE = 0.9999; // %
 const int REFRACTORY_TIME = 100; // 1 ms
+const float RANDOM_FIRE_CHANCE = 0.00005;
 
 class Synapse;
 

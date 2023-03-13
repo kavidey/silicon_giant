@@ -20,6 +20,16 @@ std::shared_ptr<Neuron> b;
 
 std::vector<std::pair<std::shared_ptr<Neuron>, std::shared_ptr<boost::circular_buffer<float>>>> neuron_monitor;
 
+bool isNeuronBeingMonitored(std::shared_ptr<Neuron> neuron) {
+    for (auto monitored_neuron: neuron_monitor) {
+        if (monitored_neuron.first->getId() == neuron->getId()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 void setup_network() {
     network = std::make_unique<Network>();
 
@@ -62,6 +72,8 @@ void setup_network() {
             }
         }
     }
+
+    network->reset();
 }
 
 void render_ui() {
@@ -121,7 +133,7 @@ void render_ui() {
 
     if (simulating) {
         for (int i = 0; i < sim_speed; i++) {
-            a->stimulate(50);
+//            a->stimulate(5);
             network->tick();
 
             for (auto monitor: neuron_monitor) {
@@ -153,7 +165,7 @@ void render_ui() {
         ImGui::TableSetColumnIndex(2);
         ImGui::PushID(i);
         auto buffer_to_array = neuron_monitor[i].second->array_one();
-        Sparkline("##spark", buffer_to_array.first, buffer_to_array.second, MINIMUM_POSSIBLE_CHARGE, 100.0f, 0,
+        Sparkline("##spark", buffer_to_array.first, buffer_to_array.second, MINIMUM_POSSIBLE_CHARGE, 50.0f, 0,
                   ImPlot::GetColormapColor(i), ImVec2(-1, 35));
         ImGui::PopID();
     }
@@ -303,6 +315,19 @@ void render_ui() {
                                         std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
         }
         if (monitored) ImGui::EndDisabled();
+
+        ImGui::Spacing();
+        ImGui::Text("Num Children: %i", selected_neuron->getOutgoingSynapses().size());
+        if (ImGui::Button("Monitor Children")) {
+            for(const auto& child_synapse: selected_neuron->getOutgoingSynapses()) {
+                std::shared_ptr<Neuron> child_neuron = child_synapse->getPostSynapticNeuron();
+                if (!isNeuronBeingMonitored(child_neuron)) {
+                    neuron_monitor.emplace_back(child_neuron,
+                                                std::make_shared<boost::circular_buffer<float>>(GRAPH_DURATION));
+                }
+
+            }
+        }
     }
     ImGui::End();
 

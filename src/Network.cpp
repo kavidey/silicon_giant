@@ -127,9 +127,6 @@ void Network::reset() {
     for (const std::shared_ptr<Neuron> &neuron: neurons) {
         neuron->reset();
     }
-    for (const std::shared_ptr<Synapse> &synapse: synapses) {
-        synapse->reset(true);
-    }
 
     timestep = 0;
 }

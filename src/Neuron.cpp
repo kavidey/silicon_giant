@@ -16,13 +16,22 @@ void Neuron::tick(int timestep) {
             in_refractory_period = false;
             charge = BASELINE_CHARGE;
         }
+        if (timestep - last_fired < REFRACTORY_TIME/20) {
+            charge = lerp(BASELINE_CHARGE-15, charge, 0.5);
+        } else {
+            charge = lerp(BASELINE_CHARGE+20, charge, 0.5);
+        }
     } else {
         // Update charge and fire if ready
         if (charge >= ACTION_POTENTIAL_THRESHOLD) {
             fire(timestep);
-        } else {
-            charge = lerp(BASELINE_CHARGE, charge, CHARGE_DECREASE_RATE);
+            charge = 30;
         }
+        charge = lerp(BASELINE_CHARGE, charge, CHARGE_DECREASE_RATE);
+    }
+
+    if (randUniform() < RANDOM_FIRE_CHANCE) {
+        fire(timestep);
     }
 }
 
@@ -37,7 +46,6 @@ void Neuron::fire(int timestep) {
     }
 
     in_refractory_period = true;
-    charge = BASELINE_CHARGE; // I think this is redundant
     last_fired = timestep;
 }
 
@@ -84,6 +92,18 @@ void Neuron::reset() {
     in_refractory_period = false;
     charge = BASELINE_CHARGE;
 //    pos = {0, 0};
+
+    int num_synapses = outgoing_synapses.size();
+    float randStrengths[num_synapses];
+    randArray(randStrengths, num_synapses, randUniform);
+    addToArray(randStrengths, num_synapses, -0.3);
+    normalizeArray(randStrengths, num_synapses, 1);
+
+    int i = 0;
+    for (auto it = outgoing_synapses.begin(); it != outgoing_synapses.end(); ++it) {
+        (*it)->set_strength(randStrengths[i]);
+        i++;
+    }
 }
 
 int Neuron::getId() const {

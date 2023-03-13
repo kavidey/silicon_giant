@@ -29,9 +29,22 @@ float dist(float x1, float y1, float x2, float y2);
 /// \return random float between 0 and 1 (uniform distribution)
 float randUniform();
 
+/// Fills an array with values from \p randFunc
+/// \param length length of the array to generate
+/// \param randFunc function that takes no inputs and returns a float
+void randArray(float *randArr, int length, float (*randFunc)());
+
 ///
 /// \return random float with a normal distribution centered at 0 and mean of 1
 float randNormal();
+
+/// Normalizes the array so that all of the entries sum to \p n
+/// \param array the array to normalize
+/// \param length the length of \p array
+/// \param n what the sum of the array should be (default: 1.0)
+void normalizeArray(float *array, int length, float n=1);
+
+void addToArray(float *array, int length, float num);
 
 #if DEBUG_LEVEL == 1
 #define DEBUG(x) std::cout << x << std::endl;
