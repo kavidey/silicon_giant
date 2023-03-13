@@ -27,13 +27,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c32ecf9f-336f-44e2-b8a9-943bfe9d9f73" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/silicon_giant/util.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib/silicon_giant/util.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/silicon_giant/util.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/silicon_giant/util.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Network.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Network.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Neuron.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Neuron.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Neuron.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Synapse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Synapse.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Synapse.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Synapse.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -106,11 +99,22 @@
       <workItem from="1672096561165" duration="737000" />
       <workItem from="1672526651564" duration="57000" />
       <workItem from="1674284699434" duration="115000" />
-      <workItem from="1678686226886" duration="7213000" />
+      <workItem from="1678686226886" duration="7814000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

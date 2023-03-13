@@ -136,8 +136,11 @@ void render_ui() {
 //            a->stimulate(5);
             network->tick();
 
-            for (auto monitor: neuron_monitor) {
-                monitor.second->push_back(monitor.first->probe());
+
+            if (sim_speed - i < GRAPH_DURATION - 1) {
+                for (auto monitor: neuron_monitor) {
+                    monitor.second->push_back(monitor.first->probe());
+                }
             }
         }
     }
