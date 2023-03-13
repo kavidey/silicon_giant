@@ -13,6 +13,7 @@
 #include "Synapse.h"
 #include "Neuron.h"
 #include "Network.h"
+#include "../lib/silicon_giant/util.h"
 
 
 Vertex get_vertex(std::shared_ptr<Neuron> neuron, Graph& g, PtrToVertex& neurons)
@@ -60,7 +61,7 @@ Network::add_connection(const std::shared_ptr<Neuron> &pre_synaptic_neuron,
     // Make sure that both neurons are in already in the list
     if ((std::find(neurons.begin(), neurons.end(), pre_synaptic_neuron) != neurons.end()) &&
         (std::find(neurons.begin(), neurons.end(), post_synaptic_neuron) != neurons.end())) {
-        auto synapse = std::make_shared<Synapse>(pre_synaptic_neuron, post_synaptic_neuron, true);
+        auto synapse = std::make_shared<Synapse>(pre_synaptic_neuron, post_synaptic_neuron, (int) randUniform()*5, true);
 
         synapses.push_back(synapse);
         pre_synaptic_neuron->add_outgoing_synapse(synapse);

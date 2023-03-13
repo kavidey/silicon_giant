@@ -94,7 +94,7 @@ void render_ui() {
 
     // This doesn't work. For some reason it rounds to an int
 //    ImGui::Text("Sim Time: %3.f s", ((float) network.getTimestep()) / 1000.0f);
-    ImGui::Text("Sim Time: %d us", network->getTimestep());
+    ImGui::Text("Sim Time: %f s", (float) network->getTimestep() / 1000000.0);
 
     ImGui::Separator();
 
@@ -133,7 +133,7 @@ void render_ui() {
 
     if (simulating) {
         for (int i = 0; i < sim_speed; i++) {
-//            a->stimulate(5);
+            a->stimulate(0.1);
             network->tick();
 
 

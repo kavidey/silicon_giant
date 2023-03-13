@@ -9,10 +9,11 @@
 #include "../lib/silicon_giant/util.h"
 
 int Synapse::global_id = 0;
-Synapse::Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::shared_ptr<Neuron> &postSynapticNeuron,
+Synapse::Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::shared_ptr<Neuron> &postSynapticNeuron, int delay,
                  bool random_strength) : pre_synaptic_neuron(move(preSynapticNeuron)),
                                          post_synaptic_neuron(move(postSynapticNeuron)),
-                                         id(global_id++)
+                                         id(global_id++),
+                                         fire_delay(delay)
                                          {
     if (random_strength) {
         base_strength = generate_random_strength();
@@ -22,10 +23,11 @@ Synapse::Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::sh
 
 
 void Synapse::fire(int timestep, float charge) {
-    post_synaptic_neuron->stimulate(charge * current_strength);
+    to_fire_charge = charge;
+    to_fire_time = timestep + fire_delay;
+    last_fired = to_fire_time;
     current_strength += FIRE_TOGETHER_WIRE_TOGETHER_STRENGTH;
     base_strength = std::clamp(base_strength, -SYNAPSE_STRENGTH_LIMIT, SYNAPSE_STRENGTH_LIMIT);
-    last_fired = timestep;
 }
 
 void Synapse::post_synaptic_neuron_fired(int timestep) {
@@ -41,6 +43,9 @@ void Synapse::long_term_potentiation(int timestep) {
 
 void Synapse::tick(int timestep) {
     current_strength = lerp(base_strength, current_strength, CURRENT_STRENGTH_DECREASE_RATE);
+    if (timestep == to_fire_time) {
+        post_synaptic_neuron->stimulate(to_fire_charge * current_strength);
+    }
 }
 
 float Synapse::getCurrentStrength() const {
@@ -72,6 +77,7 @@ void Synapse::set_strength(float strength) {
 
 void Synapse::reset() {
     last_fired = -LTP_TIME;
+    to_fire_time = -LTP_TIME;
 }
 
 float Synapse::generate_random_strength() {

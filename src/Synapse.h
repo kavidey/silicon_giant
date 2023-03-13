@@ -21,6 +21,9 @@ const float LTP_INFLUENCE = 0.0001;
 class Synapse {
     float base_strength = DEFAULT_BASE_STRENGTH;
     float current_strength = DEFAULT_BASE_STRENGTH;
+    int fire_delay;
+    int to_fire_time = -LTP_TIME;
+    float to_fire_charge;
     int last_fired = -LTP_TIME;
     std::shared_ptr<Neuron> pre_synaptic_neuron;
     std::shared_ptr<Neuron> post_synaptic_neuron;
@@ -29,7 +32,7 @@ class Synapse {
     int id;
 
 public:
-    Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::shared_ptr<Neuron> &postSynapticNeuron,
+    Synapse(const std::shared_ptr<Neuron> &preSynapticNeuron, const std::shared_ptr<Neuron> &postSynapticNeuron, int delay,
             bool random_strength);
 
     /// Simulates the neuron for one timestep

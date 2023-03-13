@@ -11,6 +11,6 @@
 /// Copied from: void Sparkline(const char* id, const float* values, int count, float min_v, float max_v, int offset, const ImVec4& col, const ImVec2& size);
 void Sparkline(const char* id, const float* values, int count, float min_v, float max_v, int offset, const ImVec4& col, const ImVec2& size);
 
-const int GRAPH_DURATION = 500;
+const int GRAPH_DURATION = 1000;
 
 #endif //SILICON_GIANT_UI_H
